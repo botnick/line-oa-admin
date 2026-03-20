@@ -1,0 +1,176 @@
+/* ============================================
+ * Tooltip — Premium portal-based tooltip
+ * Glassmorphism · Dark/Light · Animated
+ * ============================================ */
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ---- Core tooltip ---- */
+.tooltip {
+  position: fixed;
+  z-index: 99999;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  white-space: nowrap;
+  pointer-events: none;
+
+  /* Glassmorphism — light mode */
+  background: rgba(15, 23, 42, 0.88);
+  color: #f1f5f9;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.14),
+    0 1px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  /* Entrance animation */
+  animation: tooltipEnter 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Arrow ---- */
+.arrow {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transform: rotate(45deg);
+}
+
+/* ---- Placements ---- */
+.top {
+  transform: translateX(-50%) translateY(-100%);
+}
+.top .arrow {
+  bottom: -4px;
+  left: 50%;
+  margin-left: -4px;
+  border-top: none;
+  border-left: none;
+}
+
+.bottom {
+  transform: translateX(-50%);
+}
+.bottom .arrow {
+  top: -4px;
+  left: 50%;
+  margin-left: -4px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.left {
+  transform: translateX(-100%) translateY(-50%);
+}
+.left .arrow {
+  right: -4px;
+  top: 50%;
+  margin-top: -4px;
+  border-bottom: none;
+  border-left: none;
+}
+
+.right {
+  transform: translateY(-50%);
+}
+.right .arrow {
+  left: -4px;
+  top: 50%;
+  margin-top: -4px;
+  border-top: none;
+  border-right: none;
+}
+
+/* ---- Animation ---- */
+@keyframes tooltipEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%) scale(0.92);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Bottom placement animation */
+.bottom {
+  animation-name: tooltipEnterBottom;
+}
+@keyframes tooltipEnterBottom {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.92);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Right placement animation */
+.right {
+  animation-name: tooltipEnterRight;
+}
+@keyframes tooltipEnterRight {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.92);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Left placement animation */
+.left {
+  animation-name: tooltipEnterLeft;
+}
+@keyframes tooltipEnterLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%) translateY(-50%) scale(0.92);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* ---- Dark mode ---- */
+:global([data-theme='dark']) .tooltip {
+  background: rgba(51, 65, 85, 0.92);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+:global([data-theme='dark']) .arrow {
+  background: rgba(51, 65, 85, 0.92);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ---- Mobile: no hover → no tooltip ---- */
+@media (max-width: 768px) {
+  .tooltip {
+    display: none !important;
+  }
+}

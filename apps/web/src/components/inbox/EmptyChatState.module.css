@@ -1,0 +1,61 @@
+/* ============================================
+ * EmptyChatState — LINE iPad 2026 Empty View
+ * Dark/Light aware
+ * ============================================ */
+
+.emptyChatState {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--color-bg);
+}
+
+.emptyChatContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-8);
+  animation: fadeIn var(--duration-slow) var(--ease-out);
+}
+
+.emptyChatIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  margin-bottom: var(--space-5);
+  color: var(--color-text-tertiary);
+}
+
+.emptyChatTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.01em;
+}
+
+.emptyChatDescription {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  max-width: 260px;
+  line-height: var(--leading-relaxed);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,66 @@
+/* ============================================
+ * LINE OA Admin — Light Theme
+ * ============================================ */
+
+[data-theme='light'],
+:root {
+  color-scheme: light;
+
+  /* Backgrounds */
+  --color-bg: #f5f6f8;
+  --color-bg-secondary: #eef0f3;
+  --color-bg-tertiary: #e4e7ec;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-overlay: rgba(255, 255, 255, 0.96);
+  --color-surface-hover: #f3f4f6;
+  --color-bg-glass: rgba(255, 255, 255, 0.82);
+
+  /* Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverse: #ffffff;
+  --color-text-link: #06c755;
+
+  /* Borders */
+  --color-border: #d1d5db;
+  --color-border-light: #e5e7eb;
+  --color-border-focus: #06c755;
+
+  /* Chat bubbles */
+  --color-bubble-inbound: #f1f3f5;
+  --color-bubble-inbound-text: #111827;
+  --color-bubble-outbound: #06c755;
+  --color-bubble-outbound-text: #ffffff;
+
+  /* States */
+  --color-primary: #06c755;
+  --color-primary-hover: #05a847;
+  --color-primary-active: #049a3f;
+  --color-primary-light: #e6f9ee;
+  --color-danger: #ef4444;
+  --color-danger-light: #fef2f2;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fffbeb;
+  --color-success: #06c755;
+  --color-success-light: #e6f9ee;
+  --color-info: #3b82f6;
+  --color-info-light: #eff6ff;
+
+  /* Interactive */
+  --color-hover: rgba(0, 0, 0, 0.04);
+  --color-active: rgba(0, 0, 0, 0.08);
+  --color-selected: #e6f9ee;
+
+  /* Badge */
+  --color-badge: #ef4444;
+  --color-badge-text: #ffffff;
+
+  /* Skeleton */
+  --color-skeleton: #e5e7eb;
+  --color-skeleton-shine: #f3f4f6;
+
+  /* Shadow */
+  --color-shadow: rgba(0, 0, 0, 0.08);
+}

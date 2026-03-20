@@ -1,0 +1,492 @@
+/* ============================================
+ * ChatBubble — Message Bubbles
+ * LINE Flex Message-inspired card design
+ * ============================================ */
+
+.wrapper {
+  display: flex;
+  padding: var(--space-0-5) var(--space-4);
+}
+
+.inbound {
+  justify-content: flex-start;
+}
+
+.outbound {
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--space-1-5);
+}
+
+/* ---- Bubble ---- */
+.bubble {
+  max-width: 75%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-xl);
+  word-break: break-word;
+  position: relative;
+}
+
+.bubbleInbound {
+  background-color: var(--color-surface);
+  border-bottom-left-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px var(--color-shadow, rgba(0, 0, 0, 0.06));
+}
+
+.bubbleOutbound {
+  background: var(--color-primary);
+  border-bottom-right-radius: var(--radius-sm);
+  color: #ffffff;
+}
+
+/* Media bubbles have no padding */
+.bubbleMedia {
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* File card bubbles — transparent bg, no default bubble styling */
+.bubbleFile {
+  padding: 0;
+  background: transparent !important;
+  box-shadow: none;
+}
+.bubbleFile .meta {
+  margin-top: 4px;
+}
+.bubbleOutbound.bubbleFile .time,
+.bubbleOutbound.bubbleFile .status,
+.bubbleOutbound.bubbleFile .sentBy {
+  color: var(--color-text-secondary);
+}
+
+.bubbleMedia .meta {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-2);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 2px 6px;
+  border-radius: var(--radius-md);
+}
+
+.bubbleMedia .time,
+.bubbleMedia .status {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* ---- Content ---- */
+.text {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  white-space: pre-wrap;
+}
+
+/* ---- Search highlight: text-level mark ---- */
+.highlightMark {
+  background-color: rgba(255, 226, 85, 0.85);
+  color: #1a1a1a;
+  border-radius: 3px;
+  padding: 1px 3px;
+  margin: 0 -1px;
+  font-weight: inherit;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  animation: markPop 0.4s ease-out;
+}
+
+@keyframes markPop {
+  0%   { background-color: rgba(255, 226, 85, 0); }
+  50%  { background-color: rgba(255, 226, 85, 1); }
+  100% { background-color: rgba(255, 226, 85, 0.85); }
+}
+
+/* On outbound (green) bubbles, use a contrasting white highlight */
+.bubbleOutbound .highlightMark {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+/* Dark mode highlight adjustments */
+@media (prefers-color-scheme: dark) {
+  .highlightMark {
+    background-color: rgba(255, 226, 85, 0.7);
+    color: #111;
+  }
+}
+
+/* ---- Search highlight: bubble-level glow ---- */
+.highlightedBubbleItem {
+  animation: pulseHighlight 3s ease-out;
+}
+
+.highlightedBg {
+  box-shadow:
+    0 0 0 2.5px rgba(6, 199, 85, 0.4),
+    0 0 16px rgba(6, 199, 85, 0.12) !important;
+  transition: box-shadow 0.4s ease;
+}
+
+@keyframes pulseHighlight {
+  0%   { background-color: rgba(6, 199, 85, 0.15); }
+  20%  { background-color: rgba(6, 199, 85, 0.15); }
+  100% { background-color: transparent; }
+}
+
+/* ---- Sent by admin label ---- */
+.sentBy {
+  font-size: 0.65rem;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 4px;
+}
+
+/* ---- Media button (clickable image/video) ---- */
+.mediaButton {
+  display: block;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.mediaImage {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: var(--radius-xl);
+  object-fit: cover;
+  transition: filter 0.15s;
+}
+
+.mediaButton:hover .mediaImage {
+  filter: brightness(0.92);
+}
+
+.mediaOverlay {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.mediaButton:hover .mediaOverlay {
+  opacity: 1;
+}
+
+/* ---- Video thumbnail ---- */
+.videoThumb {
+  width: 220px;
+  height: 160px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: filter 0.15s;
+}
+
+.mediaButton:hover .videoThumb {
+  filter: brightness(1.1);
+}
+
+.playIcon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  color: #ffffff;
+  font-size: 1.2rem;
+  backdrop-filter: blur(8px);
+}
+
+.videoDuration {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- Audio player ---- */
+.audioPlayer {
+  display: block;
+  max-width: 250px;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+}
+
+/* ---- Placeholder (loading state) ---- */
+.mediaPlaceholder {
+  padding: var(--space-4) var(--space-6);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.placeholderSpinner {
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--line-green);
+  border-radius: var(--radius-full);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Sticker ---- */
+.sticker {
+  font-size: 2.5rem;
+  text-align: center;
+  padding: var(--space-2);
+}
+
+.stickerImg {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+/* ---- Location ---- */
+.location {
+  font-size: var(--text-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mapLink {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: var(--text-xs);
+}
+
+/* ==============================================
+ * FILE — LINE Flex Message-style Card
+ * ============================================== */
+.fileLinkWrapper {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fileCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 260px;
+  min-width: 0;
+  overflow: hidden;
+  box-shadow:
+    0 1px 4px var(--color-shadow, rgba(0, 0, 0, 0.06)),
+    0 0 0 1px var(--color-border-light);
+  transition: box-shadow 0.2s ease;
+}
+
+.fileLinkWrapper:hover .fileCard {
+  box-shadow:
+    0 4px 12px var(--color-shadow, rgba(0, 0, 0, 0.1)),
+    0 0 0 1px var(--color-border-light);
+}
+
+.bubbleOutbound .fileCard {
+  border: none;
+}
+
+/* ─── File card header — icon + info ─── */
+.fileCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  min-width: 0;
+}
+
+/* Document icon — styled like LINE's file icon */
+.fileIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 48px;
+  background: var(--color-bg-secondary);
+  border: 1.5px solid var(--color-border);
+  border-radius: 6px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Document lines decoration */
+.fileIconWrapper::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: #94a3b8;
+  border-radius: 1px;
+  box-shadow:
+    0 6px 0 #b0bdd0,
+    0 12px 0 #cbd5e1,
+    0 18px 0 #d1dae6;
+}
+
+/* Corner fold on document icon */
+.fileIconWrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(135deg, transparent 50%, #d1dae6 50%);
+  border-bottom-left-radius: 3px;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}
+
+.fileName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.fileDetails {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-weight: 400;
+}
+
+/* ─── Download button — LINE style ─── */
+.fileDownloadBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 9px 14px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  background: transparent;
+  letter-spacing: 0.01em;
+}
+
+.fileDownloadBtn:hover,
+.fileLinkWrapper:hover .fileDownloadBtn {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* ---- Meta ---- */
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin-top: 2px;
+}
+
+.time {
+  font-size: 0.6rem;
+  opacity: 0.55;
+  letter-spacing: 0.01em;
+}
+
+.status {
+  font-size: 0.6rem;
+  opacity: 0.55;
+}
+
+/* ---- Emojis ---- */
+.inlineEmoji {
+  height: 1.4em;
+  width: 1.4em;
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin: 0 1px;
+}
+
+/* ---- Admin Avatar (outbound) ---- */
+.adminAvatar {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.adminAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.adminAvatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4a90d9, #357abd);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 50%;
+  user-select: none;
+}

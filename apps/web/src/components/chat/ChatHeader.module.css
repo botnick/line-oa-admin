@@ -1,0 +1,414 @@
+/* ============================================
+ * ChatHeader — Chat View Header
+ * Same on all screen sizes
+ * ============================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-overlay);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--color-border);
+  min-height: 3.25rem;
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  flex: 1;
+}
+
+.backButton {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-default),
+    transform var(--duration-fast) var(--ease-default);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.backButton:hover {
+  background-color: var(--color-hover);
+}
+
+.backButton:active {
+  transform: scale(0.92);
+}
+
+@media (min-width: 768px) {
+  .backButton {
+    display: none;
+  }
+}
+
+/* Avatar */
+.avatar {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #06c755 0%, #00b847 100%);
+  color: #ffffff;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-heading);
+}
+
+/* Info */
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.labels {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.labelChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.65rem;
+  font-weight: var(--weight-medium);
+  padding: 1px 7px 1px 5px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+  white-space: nowrap;
+  line-height: 1.5;
+  max-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.labelDot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.labelMore {
+  font-size: 0.6rem;
+  color: var(--color-text-tertiary);
+  font-weight: var(--weight-medium);
+}
+
+.status {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.actionBtn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-default),
+    color var(--duration-fast) var(--ease-default),
+    transform var(--duration-fast) var(--ease-default);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.actionBtn:hover {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.actionBtn:active {
+  transform: scale(0.9);
+}
+
+.actionBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionBtnActive {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.actionBtnActive:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* Danger variant (delete) */
+.actionBtnDanger:hover {
+  color: var(--color-danger);
+  background-color: rgba(220, 38, 38, 0.08);
+}
+
+/* desktopActions — always hidden, all actions go through ⋮ menu */
+.desktopActions {
+  display: none;
+}
+
+/* ⋮ more menu — always visible on all screen sizes */
+.mobileMore {
+  display: block;
+  position: relative;
+}
+
+/* ⋮ Dropdown Menu */
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.mobileMenuDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--color-border);
+  min-width: 190px;
+  overflow: hidden;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  animation: dropdownIn 0.15s ease-out forwards;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menuItem:hover {
+  background-color: var(--color-hover);
+}
+
+.menuItem:active {
+  background-color: var(--color-active);
+}
+
+.menuItemActive {
+  color: var(--color-primary);
+}
+
+.menuItemActive:hover {
+  background-color: var(--color-primary-light);
+}
+
+.menuSeparator {
+  height: 1px;
+  background: var(--color-border);
+  margin: 3px 8px;
+}
+
+.menuItemDanger {
+  color: var(--color-danger);
+}
+
+.menuItemDanger:hover {
+  background-color: rgba(220, 38, 38, 0.06);
+}
+
+/* ============================================
+ * Delete Confirmation Modal
+ * ============================================ */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl, 16px);
+  padding: var(--space-6, 1.5rem);
+  width: min(90vw, 360px);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.2s ease-out;
+}
+
+.modalIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full, 50%);
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--color-danger);
+  margin: 0 auto var(--space-3, 0.75rem);
+}
+
+.modalTitle {
+  font-size: var(--text-lg, 1.125rem);
+  font-weight: var(--weight-bold, 700);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2, 0.5rem);
+}
+
+.modalDesc {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--space-5, 1.25rem);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-3, 0.75rem);
+}
+
+.modalCancel,
+.modalConfirm {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-lg, 12px);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--weight-semibold, 600);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast, 150ms) var(--ease-default, ease);
+}
+
+.modalCancel {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.modalCancel:hover {
+  background: var(--color-hover);
+}
+
+.modalConfirm {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+.modalConfirm:hover {
+  background: #b91c1c;
+}
+
+.modalConfirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

@@ -1,0 +1,104 @@
+/* ============================================
+ * Inbox Layout — Master-Detail Split View
+ * iPad LINE style on desktop,
+ * Single column push navigation on mobile
+ * ============================================ */
+
+.layout {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.sidebar {
+  height: 100%;
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background-color: var(--color-surface);
+  min-width: 260px;
+  max-width: 600px;
+}
+
+/* ─── Resize handle (vertical drag bar between sidebar & main) ─── */
+.resizeHandle {
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background 0.2s;
+  margin-left: -2px;
+  margin-right: -3px;
+}
+/* Subtle grip indicator — only shows on hover */
+.resizeHandle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 0;
+  border-radius: 2px;
+  background: var(--color-text-tertiary);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+.resizeHandle:hover::before {
+  opacity: 1;
+  height: 32px;
+  background: var(--line-green, #06c755);
+}
+.resizeHandle:hover {
+  background: var(--color-primary-light);
+}
+.resizeHandle:active {
+  background: var(--color-active);
+}
+.resizeHandle:active::before {
+  opacity: 1;
+  height: 48px;
+  background: var(--line-green, #06c755);
+}
+
+.main {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  background-color: var(--color-bg);
+}
+
+/* 
+ * Mobile Navigation Logic (max-width: 767px)
+ */
+@media (max-width: 767px) {
+  .sidebar {
+    width: 100% !important;
+    max-width: none;
+    border-right: none;
+  }
+
+  /* Hide resize handle on mobile */
+  .resizeHandle {
+    display: none;
+  }
+
+  /* When viewing list on mobile (not detail view), hide the detail area */
+  .layout.isList .main {
+    display: none;
+  }
+
+  /* When viewing detail on mobile, hide the sidebar list */
+  .layout.isDetail .sidebar {
+    display: none;
+  }
+}

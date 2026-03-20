@@ -1,0 +1,78 @@
+/* ============================================
+ * BottomNav — Always Visible Navigation
+ * Hidden on desktop (md+)
+ * ============================================ */
+
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  /* Add safe area inset to the total height to prevent squishing content */
+  height: calc(var(--bottomnav-height) + env(safe-area-inset-bottom, 0px));
+  background: var(--color-bg-glass, rgba(255, 255, 255, 0.92));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--color-border);
+
+  /* Safe area insets for all edges */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.navItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0; /* allow shrinking */
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  font-size: 0.625rem;
+  font-weight: var(--weight-medium);
+  transition: color var(--duration-fast) var(--ease-default);
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navItem:active {
+  transform: scale(0.92);
+}
+
+.navItemActive {
+  color: var(--color-primary);
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* Hide BottomNav on desktop since SideNav takes over */
+@media (min-width: 768px) {
+  .bottomNav {
+    display: none;
+  }
+}
+
+/* Extra-small screens: reduce font size */
+@media (max-width: 320px) {
+  .navItem {
+    font-size: 0.5625rem;
+    gap: 1px;
+  }
+}

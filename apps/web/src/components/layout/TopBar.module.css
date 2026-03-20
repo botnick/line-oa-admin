@@ -1,0 +1,124 @@
+/* ============================================
+ * TopBar — LINE iPad 2026 Navigation Header
+ * Clean, minimal with frosted glass
+ * ============================================ */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(var(--topbar-height) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: 0px;
+  padding-left: var(--space-5);
+  padding-right: var(--space-5);
+  background: var(--color-bg-glass, rgba(255, 255, 255, 0.82));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+/* ── SSE reconnection shimmer bar ────────────────
+ * Phase-driven:
+ *   default (.shimmerBar)     → amber gradient, full opacity
+ *   + .shimmerSuccess         → green gradient, fades out
+ * Uses CSS custom properties so the gradient color
+ * transitions smoothly without JS color manipulation.
+ * ──────────────────────────────────────────────── */
+
+.shimmerBar {
+  --shimmer-from: #f59e0b;
+  --shimmer-to:   #fbbf24;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0.85;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--shimmer-from) 40%,
+      var(--shimmer-to) 60%,
+      transparent 100%
+    );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  transition: opacity 0.8s ease-out;
+}
+
+/* Reconnected → green + fade out */
+.shimmerSuccess {
+  --shimmer-from: #22c55e;
+  --shimmer-to:   #4ade80;
+  animation: shimmer 1.5s ease-in-out infinite, fadeOut 2s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes fadeOut {
+  0%   { opacity: 0.85; }
+  60%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+/* ── Existing utility classes ──────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--duration-fast) var(--ease-default),
+    color var(--duration-fast) var(--ease-default),
+    transform var(--duration-fast) var(--ease-default);
+}
+
+.iconButton:hover {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.iconButton:active {
+  background-color: var(--color-active);
+  transform: scale(0.92);
+}
+
+@media (min-width: 768px) {
+  .topbar {
+    display: none;
+  }
+}

@@ -1,0 +1,360 @@
+/* ============================================
+ * ChatSearchBar — In-chat message search
+ * Glassmorphism style matching ChatHeader
+ * ============================================ */
+
+.container {
+  position: relative;
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+/* ---- Search Bar Row ---- */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  background: var(--color-surface-overlay);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--color-border);
+  animation: slideDown 0.2s var(--ease-default, ease-out);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Input wrapper — pill shape with subtle bg */
+.inputWrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full, 999px);
+  padding: 0.375rem 0.75rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.inputWrap:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.searchIcon {
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.inputWrap:focus-within .searchIcon {
+  color: var(--color-primary);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--color-text-primary);
+  padding: 2px 0;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Result counter pill */
+.counter {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 999px);
+  font-weight: var(--weight-semibold, 600);
+  flex-shrink: 0;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.counterEmpty {
+  background: var(--color-hover);
+  color: var(--color-text-tertiary);
+}
+
+/* Navigation & Close buttons */
+.navBtn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-lg, 12px);
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast, 150ms) var(--ease-default, ease),
+    color var(--duration-fast, 150ms) var(--ease-default, ease),
+    transform var(--duration-fast, 150ms) var(--ease-default, ease);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navBtn:hover {
+  background: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.navBtn:active {
+  transform: scale(0.9);
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.navBtn:disabled:active {
+  transform: none;
+}
+
+.closeBtn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-lg, 12px);
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast, 150ms) var(--ease-default, ease),
+    color var(--duration-fast, 150ms) var(--ease-default, ease),
+    transform var(--duration-fast, 150ms) var(--ease-default, ease);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.closeBtn:hover {
+  background: rgba(220, 38, 38, 0.06);
+  color: var(--color-danger);
+}
+
+.closeBtn:active {
+  transform: scale(0.9);
+}
+
+.divider {
+  width: 1px;
+  height: 1.25rem;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ---- Results Dropdown ---- */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 22rem;
+  overflow-y: auto;
+  background: var(--color-surface-overlay);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.06);
+  animation: dropdownIn 0.18s var(--ease-default, ease-out);
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 99px;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Meta text (loading / empty) */
+.meta {
+  padding: var(--space-5, 1.25rem) var(--space-4, 1rem);
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm, 0.875rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+}
+
+.metaIcon {
+  color: var(--color-text-tertiary);
+  opacity: 0.5;
+}
+
+/* ---- Result Item ---- */
+.resultItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  width: 100%;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background-color 0.15s;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+}
+
+.resultItem:hover {
+  background: var(--color-hover);
+}
+
+.resultItemActive {
+  background: var(--color-primary-light);
+}
+
+.resultItemActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--color-primary, #06c755);
+}
+
+.resultItem:last-child {
+  border-bottom: none;
+}
+
+/* Avatar */
+.resultAvatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full, 50%);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.resultAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resultAvatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: var(--weight-bold, 700);
+  color: #ffffff;
+  font-family: var(--font-heading, inherit);
+}
+
+.resultAvatarUser {
+  background: linear-gradient(135deg, #06c755 0%, #00b847 100%);
+}
+
+.resultAvatarAdmin {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* Content */
+.resultContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2, 0.5rem);
+}
+
+.resultName {
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultTime {
+  font-size: 0.65rem;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.resultText {
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* Keyword highlight */
+.highlight {
+  background: rgba(6, 199, 85, 0.2);
+  color: var(--color-primary);
+  font-weight: var(--weight-semibold, 600);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* ---- Overlay behind dropdown ---- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+/* We removed the static dark-mode overrides in favor of pure CSS variables everywhere */

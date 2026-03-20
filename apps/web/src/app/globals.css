@@ -1,0 +1,274 @@
+/* ============================================
+ * LINE OA Admin — Global Styles
+ * ============================================ */
+
+@import '../styles/reset.css';
+@import '../styles/tokens.css';
+@import '../styles/themes/light.css';
+@import '../styles/themes/dark.css';
+
+/* ---- Font Faces ---- */
+
+/* Sarabun — Body text */
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  src: url('/fonts/Sarabun-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* LINE Seed Sans TH — Headings */
+@font-face {
+  font-family: 'LINE Seed Sans TH';
+  src: url('/fonts/LINESeedSansTH_W_Rg.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed Sans TH';
+  src: url('/fonts/LINESeedSansTH_W_Bd.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed Sans TH';
+  src: url('/fonts/LINESeedSansTH_W_He.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed Sans TH';
+  src: url('/fonts/LINESeedSansTH_W_Th.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed Sans TH';
+  src: url('/fonts/LINESeedSansTH_W_XBd.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================
+ * Base Styles + Anti-Zoom Protection
+ * ============================================ */
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  /* ▸ Prevent double-tap zoom globally */
+  touch-action: manipulation;
+  /* ▸ Prevent iOS callout menu on long-press */
+  -webkit-touch-callout: none;
+  /* ▸ Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  transition: background-color var(--duration-normal) var(--ease-default),
+              color var(--duration-normal) var(--ease-default);
+  /* ▸ Remove tap highlight on all mobile browsers */
+  -webkit-tap-highlight-color: transparent;
+  /* ▸ Prevent pull-to-refresh & overscroll bounce */
+  overscroll-behavior: none;
+}
+
+/* ▸ Wildcard: ensure ALL elements inherit touch-action */
+* {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- Interactive elements — full anti-zoom ---- */
+button,
+a,
+input,
+select,
+textarea,
+label,
+summary,
+details,
+[role="button"],
+[role="link"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="switch"],
+[role="checkbox"],
+[role="radio"],
+[tabindex] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* ---- Form elements — prevent iOS auto-zoom on focus ---- */
+/* iOS Safari zooms in on inputs with font-size < 16px */
+input,
+select,
+textarea {
+  font-size: max(16px, 1em);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ▸ Contenteditable areas */
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ---- Scrollable containers ---- */
+/* Allow vertical scroll but prevent pinch-zoom */
+[data-scrollable],
+.messages,
+.conversationList {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* ---- Utility Classes ---- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skeleton animation */
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton) 25%,
+    var(--color-skeleton-shine) 50%,
+    var(--color-skeleton) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Responsive breakpoints as reference ---- */
+/* sm: 640px, md: 768px, lg: 1024px, xl: 1280px */
+
+/* ---- Search highlight flash (added via JS on jump-to-message) ---- */
+@keyframes searchFlash {
+  0%   { background-color: rgba(6, 199, 85, 0.22); box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.15); }
+  15%  { background-color: rgba(6, 199, 85, 0.22); box-shadow: 0 0 0 4px rgba(6, 199, 85, 0.15); }
+  60%  { background-color: rgba(6, 199, 85, 0.08); box-shadow: 0 0 0 0px transparent; }
+  100% { background-color: transparent; box-shadow: none; }
+}
+
+.search-highlight-flash {
+  animation: searchFlash 2.8s ease-out;
+  border-radius: var(--radius-lg, 12px);
+}
+
+/* Focus visible ring */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+ * PWA Standalone Mode — Native iOS App Feel
+ * ============================================ */
+@media all and (display-mode: standalone) {
+  /* ▸ Prevent rubber-band overscroll (iOS bounce) */
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  /* ▸ Prevent full-page text selection */
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* ▸ Allow text selection in inputs and editable areas */
+  input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  /* ▸ Disable image/link long-press context menus (native feel) */
+  img, a, svg {
+    -webkit-touch-callout: none;
+  }
+}
+
+/* ▸ Safe area padding utilities (always available) */
+.safe-area-top { padding-top: env(safe-area-inset-top); }
+.safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.safe-area-left { padding-left: env(safe-area-inset-left); }
+.safe-area-right { padding-right: env(safe-area-inset-right); }

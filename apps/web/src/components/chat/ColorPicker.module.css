@@ -1,0 +1,122 @@
+/* ============================================
+ * ColorPicker — Swatch-based color selection
+ * Dark/Light aware
+ * ============================================ */
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.grid[data-size="sm"] .swatch {
+  width: 20px;
+  height: 20px;
+}
+
+.grid[data-size="md"] .swatch {
+  width: 26px;
+  height: 26px;
+}
+
+.swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.swatch:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.2));
+}
+
+.swatchActive {
+  border-color: var(--color-surface);
+  box-shadow:
+    0 0 0 2px currentColor,
+    0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.15));
+  transform: scale(1.15);
+}
+
+/* Checkmark on active swatch */
+.swatchActive::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Popover trigger ─── */
+.popoverWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 1px 4px var(--color-shadow, rgba(0, 0, 0, 0.12));
+  flex-shrink: 0;
+}
+
+.trigger:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.2));
+}
+
+/* ─── Popover dropdown ─── */
+.popover {
+  position: fixed;
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow:
+    0 4px 20px var(--color-shadow, rgba(0, 0, 0, 0.12)),
+    0 0 0 1px var(--color-border-light);
+  z-index: 9999;
+  width: max-content;
+  max-width: 200px;
+  animation: popIn 0.15s ease;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* Mobile: popover wider */
+@media (max-width: 767px) {
+  .swatch {
+    width: 28px;
+    height: 28px;
+  }
+
+  .grid {
+    gap: 8px;
+  }
+
+  .trigger {
+    width: 26px;
+    height: 26px;
+  }
+
+  .popover {
+    max-width: 240px;
+    padding: 12px;
+  }
+}

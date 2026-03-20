@@ -1,0 +1,109 @@
+/* ============================================
+ * SideNav — LINE iPad App Style Side Navigation
+ * Visible only on desktop (md+)
+ * ============================================ */
+
+.sideNav {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--sidenav-width, 64px);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-4) 0;
+  gap: var(--space-2);
+  z-index: var(--z-nav);
+  flex-shrink: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  background: transparent;
+  transition:
+    background-color var(--duration-fast) var(--ease-default),
+    color var(--duration-fast) var(--ease-default),
+    transform var(--duration-fast) var(--ease-bounce);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navItem:hover {
+  color: var(--color-text-primary);
+  background: var(--color-hover);
+}
+
+.navItem:active {
+  transform: scale(0.92);
+}
+
+/* Active State */
+.navItemActive {
+  color: #ffffff;
+  background: var(--color-primary) !important;
+}
+
+.navItemActive:hover {
+  background: var(--color-primary-hover, var(--color-primary)) !important;
+}
+
+/* Hide SideNav on mobile */
+@media (max-width: 767px) {
+  .sideNav {
+    display: none;
+  }
+}
+
+/* ── SSE reconnection shimmer bar ────────────────
+ * Vertical gradient line on the right edge.
+ * Phase-driven via CSS custom properties.
+ * ──────────────────────────────────────────────── */
+
+.shimmerBar {
+  --shimmer-from: #f59e0b;
+  --shimmer-to:   #fbbf24;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 2px;
+  overflow: hidden;
+  opacity: 0.75;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--shimmer-from) 40%,
+      var(--shimmer-to) 60%,
+      transparent 100%
+    );
+  background-size: 100% 200%;
+  animation: shimmerVertical 1.5s ease-in-out infinite;
+  transition: opacity 0.8s ease-out;
+}
+
+/* Reconnected → green + fade out */
+.shimmerSuccess {
+  --shimmer-from: #22c55e;
+  --shimmer-to:   #4ade80;
+  animation: shimmerVertical 1.5s ease-in-out infinite, fadeOut 2s ease-out forwards;
+}
+
+@keyframes shimmerVertical {
+  0%   { background-position: 0 100%; }
+  100% { background-position: 0 -100%; }
+}
+
+@keyframes fadeOut {
+  0%   { opacity: 0.75; }
+  60%  { opacity: 0.5; }
+  100% { opacity: 0; }
+}

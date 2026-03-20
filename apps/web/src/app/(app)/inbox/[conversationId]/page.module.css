@@ -1,0 +1,134 @@
+/* ============================================
+ * Chat Detail Page — Message Thread
+ * Same on all screen sizes
+ * ============================================ */
+
+.pageWrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chatPage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background-color: var(--color-bg-secondary);
+  overflow: hidden;
+}
+
+/* Message area */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-anchor: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Thin scrollbar */
+.messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 99px;
+}
+
+/* Loading state */
+.loadingOlder {
+  text-align: center;
+  padding: var(--space-3);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+}
+
+/* Empty state */
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  gap: var(--space-1);
+  padding: var(--space-6);
+}
+
+.emptyState p:last-child {
+  font-size: var(--text-lg);
+}
+
+/* ---- Date Separator ---- */
+.dateSeparator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) 0;
+  margin: var(--space-2) 0;
+}
+
+.dateSeparatorLabel {
+  font-size: 0.6875rem;
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-overlay);
+  backdrop-filter: blur(8px);
+  padding: var(--space-0-5) var(--space-3);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- Beginning of conversation ---- */
+.beginningIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  text-align: center;
+}
+
+.beginningIcon {
+  color: var(--color-text-tertiary);
+}
+
+.beginningText {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-medium);
+}
+
+.beginningSubtext {
+  font-size: 0.65rem;
+  color: var(--color-text-tertiary);
+}
+
+/* ---- Message highlight (search navigation) ---- */
+:global(.searchHighlight) {
+  animation: flashHighlight 1.8s ease-out;
+  border-radius: var(--radius-lg, 12px);
+}
+
+@keyframes flashHighlight {
+  0%   { background: rgba(255, 220, 40, 0.4); }
+  30%  { background: rgba(255, 220, 40, 0.2); }
+  100% { background: transparent; }
+}

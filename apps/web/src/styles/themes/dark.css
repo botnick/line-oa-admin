@@ -1,0 +1,72 @@
+/* ============================================
+ * LINE OA Admin — Dark Theme
+ * ============================================ */
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Backgrounds */
+  --color-bg: #0f0f14;
+  --color-bg-secondary: #16161d;
+  --color-bg-tertiary: #1e1e28;
+  --color-surface: #1a1a24;
+  --color-surface-raised: #222230;
+  --color-surface-overlay: rgba(15, 15, 20, 0.95);
+  --color-surface-hover: #252532;
+  --color-bg-glass: rgba(15, 15, 20, 0.82);
+
+  /* Text */
+  --color-text-primary: #e8e8ed;
+  --color-text-secondary: #9ca3af;
+  --color-text-tertiary: #6b7280;
+  --color-text-inverse: #0f0f14;
+  --color-text-link: #06c755;
+
+  /* Borders */
+  --color-border: #2d2d3a;
+  --color-border-light: #252532;
+  --color-border-focus: #06c755;
+
+  /* Chat bubbles */
+  --color-bubble-inbound: #222230;
+  --color-bubble-inbound-text: #e8e8ed;
+  --color-bubble-outbound: #06c755;
+  --color-bubble-outbound-text: #ffffff;
+
+  /* States */
+  --color-primary: #06c755;
+  --color-primary-hover: #1dd66a;
+  --color-primary-active: #33e07d;
+  --color-primary-light: rgba(6, 199, 85, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.12);
+  --color-warning: #f59e0b;
+  --color-warning-light: rgba(245, 158, 11, 0.12);
+  --color-success: #06c755;
+  --color-success-light: rgba(6, 199, 85, 0.12);
+  --color-info: #3b82f6;
+  --color-info-light: rgba(59, 130, 246, 0.12);
+
+  /* Interactive */
+  --color-hover: rgba(255, 255, 255, 0.06);
+  --color-active: rgba(255, 255, 255, 0.1);
+  --color-selected: rgba(6, 199, 85, 0.12);
+
+  /* Badge */
+  --color-badge: #ef4444;
+  --color-badge-text: #ffffff;
+
+  /* Skeleton */
+  --color-skeleton: #2d2d3a;
+  --color-skeleton-shine: #3a3a4a;
+
+  /* Shadow adjustments */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.3), 0 8px 10px rgba(0, 0, 0, 0.2);
+
+  /* Shadow */
+  --color-shadow: rgba(0, 0, 0, 0.25);
+}

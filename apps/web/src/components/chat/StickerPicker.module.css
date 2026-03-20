@@ -1,0 +1,93 @@
+/* ============================================
+ * StickerPicker — LINE sticker selection panel
+ * Dark/Light aware
+ * ============================================ */
+
+.picker {
+  width: 360px;
+  max-height: 320px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px var(--color-shadow, rgba(0, 0, 0, 0.15));
+}
+
+/* ─── Pack tabs ─── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border-light);
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tab:hover {
+  background: var(--color-hover);
+}
+.tabActive {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.tabImg {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* ─── Sticker grid ─── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  padding: 10px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.stickerBtn {
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 4px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stickerBtn:hover {
+  background: var(--color-hover);
+  transform: scale(1.08);
+}
+.stickerBtn:active {
+  transform: scale(0.95);
+}
+
+.stickerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

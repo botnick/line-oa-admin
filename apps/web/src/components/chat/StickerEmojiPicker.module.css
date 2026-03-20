@@ -1,0 +1,212 @@
+/* ============================================
+ * StickerEmojiPicker — LINE-style unified picker
+ * Dark/Light aware
+ * ============================================ */
+
+.picker {
+  width: 100%;
+  max-height: 380px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -4px 24px var(--color-shadow, rgba(0, 0, 0, 0.08)), 0 0 0 1px var(--color-border-light);
+}
+
+/* ─── Mode bar (Sticker / Emoji toggle + close) ─── */
+.modeBar {
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-light);
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.modeTab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.modeTab:hover {
+  color: var(--color-text-secondary);
+}
+.modeTabActive {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.closeBtn {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-right: 4px;
+}
+.closeBtn:hover {
+  background: var(--color-hover);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Sub-tabs (pack/product thumbnails — horizontal scroll) ─── */
+.subTabs {
+  display: flex;
+  gap: 1px;
+  padding: 4px 6px;
+  overflow-x: auto;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-light);
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.subTabs::-webkit-scrollbar { display: none; }
+
+.subTab {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.subTab:hover {
+  background: var(--color-hover);
+}
+.subTabActive {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.subTabImg {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* ─── Sticker Grid — auto-fill with LINE-standard sizing ─── */
+.stickerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 2px;
+  padding: 8px 12px;
+  overflow-y: auto;
+  flex: 1;
+  justify-items: center;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.stickerBtn {
+  width: 100%;
+  max-width: 108px;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px;
+  transition: all 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stickerBtn > div { transform: scale(0.85); transition: transform 0.12s ease; }
+.stickerBtn:hover { background: var(--color-hover); }
+.stickerBtn:hover > div { transform: scale(1); }
+.stickerBtn:active > div { transform: scale(0.78); }
+
+/* ─── Emoji Grid — auto-fill with compact sizing ─── */
+.emojiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  gap: 2px;
+  padding: 6px 10px 8px;
+  overflow-y: auto;
+  flex: 1;
+  justify-items: center;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.emojiBtn {
+  width: 100%;
+  max-width: 52px;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px;
+  transition: all 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.emojiBtn > div { transform: scale(0.82); transition: transform 0.12s ease; }
+.emojiBtn:hover { background: var(--color-hover); }
+.emojiBtn:hover > div { transform: scale(1); }
+.emojiBtn:active > div { transform: scale(0.75); }
+
+/* ─── Shared image style ─── */
+.itemImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ============================================
+ * Mobile responsive
+ * ============================================ */
+@media (max-width: 767px) {
+  .picker {
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modeTab { padding: 10px 16px; font-size: 13px; gap: 6px; }
+  .closeBtn { width: 32px; height: 32px; }
+
+  .subTab { width: 40px; height: 40px; }
+  .subTabImg { width: 32px; height: 32px; }
+
+  .stickerGrid {
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 2px;
+    padding: 8px;
+  }
+  .stickerBtn { max-width: 96px; padding: 4px; }
+
+  .emojiGrid {
+    grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+    gap: 2px;
+    padding: 6px 8px;
+  }
+  .emojiBtn { max-width: 46px; padding: 3px; }
+}

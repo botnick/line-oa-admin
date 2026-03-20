@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build
+.next/
+dist/
+out/
+*.tsbuildinfo
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# ide
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# turbo
+.turbo/
+
+# prisma
+packages/db/prisma/migrations/
+
+# misc
+*.log
+coverage/
+.cache/
+tmp/
+
+# app settings (sensitive credentials)
+data/

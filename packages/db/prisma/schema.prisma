@@ -1,0 +1,611 @@
+// ============================================
+// LINE OA Admin — Prisma Schema
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// Auth & Admin
+// ============================================
+
+model AdminUser {
+  id          String    @id @default(cuid())
+  lineUserId  String    @unique @map("line_user_id")
+  displayName String?   @map("display_name")
+  pictureUrl  String?   @map("picture_url")
+  role        AdminRole @default(ADMIN)
+  isActive    Boolean   @default(true) @map("is_active")
+  lastLoginAt DateTime? @map("last_login_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  sentMessages  Message[]
+  quickReplies  QuickReply[]
+  channelAccess AdminChannelAccess[]
+  notifications        Notification[]       @relation("NotificationOwner")
+  claimedNotifications Notification[]       @relation("NotificationClaimer")
+  pushSubscriptions    PushSubscription[]
+  broadcasts       Broadcast[]
+
+  @@map("admin_users")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  adminUserId String   @map("admin_user_id")
+  token       String   @unique
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  userAgent   String?  @map("user_agent")
+  ipAddress   String?  @map("ip_address")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// ============================================
+// LINE Channel Configuration
+// ============================================
+
+model LineAccount {
+  id                 String    @id @default(cuid())
+  botUserId          String    @unique @map("bot_user_id")
+  basicId            String?   @map("basic_id")
+  displayName        String?   @map("display_name")
+  pictureUrl         String?   @map("picture_url")
+  pictureR2Key       String?   @map("picture_r2_key")
+  channelId          String    @unique @map("channel_id")
+  channelSecret      String    @map("channel_secret")
+  channelAccessToken String    @map("channel_access_token")
+  isActive           Boolean   @default(true) @map("is_active")
+  webhookVerified    Boolean   @default(false) @map("webhook_verified")
+  lastWebhookAt      DateTime? @map("last_webhook_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  conversations    Conversation[]
+  messages         Message[]
+  outboundRequests OutboundRequest[]
+  tags             Tag[]
+  labels           Label[]
+  adminAccess      AdminChannelAccess[]
+  broadcasts       Broadcast[]
+
+  @@map("line_accounts")
+}
+
+// ============================================
+// App Settings
+// ============================================
+
+model AppSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
+
+// ============================================
+// Contacts & Conversations
+// ============================================
+
+model Contact {
+  id                    String    @id @default(cuid())
+  lineUserId            String    @unique @map("line_user_id")
+  displayName           String?   @map("display_name")
+  displayNameNormalized String?   @map("display_name_normalized")
+  pictureUrl            String?   @map("picture_url")
+  avatarR2Key           String?   @map("avatar_r2_key")
+  statusMessage         String?   @map("status_message")
+  language              String?
+  isFollowing           Boolean   @default(true) @map("is_following")
+  unfollowedAt          DateTime? @map("unfollowed_at")
+  firstSeenAt           DateTime  @default(now()) @map("first_seen_at")
+  lastSeenAt            DateTime  @default(now()) @map("last_seen_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  metadata              Json?
+
+  conversations Conversation[]
+  tags          ContactTag[]
+  followLogs    ContactFollowLog[]
+
+  @@index([displayName])
+  @@index([lastSeenAt])
+  @@map("contacts")
+}
+
+model ContactFollowLog {
+  id        String              @id @default(cuid())
+  contactId String              @map("contact_id")
+  action    ContactFollowAction
+  createdAt DateTime            @default(now()) @map("created_at")
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@index([contactId, createdAt(sort: Desc)])
+  @@map("contact_follow_logs")
+}
+
+enum ContactFollowAction {
+  FOLLOW
+  UNFOLLOW
+}
+
+model Conversation {
+  id                String             @id @default(cuid())
+  lineAccountId     String             @map("line_account_id")
+  contactId         String             @map("contact_id")
+  status            ConversationStatus @default(ACTIVE)
+  isPinned          Boolean            @default(false) @map("is_pinned")
+  isArchived        Boolean            @default(false) @map("is_archived")
+  unreadCount       Int                @default(0) @map("unread_count")
+  lastMessageId     String?            @map("last_message_id")
+  lastMessageText   String?            @map("last_message_text")
+  lastMessageAt     DateTime?          @map("last_message_at")
+  lastMessageType   MessageType?       @map("last_message_type")
+  lastMessageSource MessageSource?     @map("last_message_source")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  contact     Contact             @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  lineAccount LineAccount         @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+  messages    Message[]
+  notes       Note[]
+  labels      ConversationLabel[]
+
+  @@unique([lineAccountId, contactId])
+  @@index([lineAccountId])
+  @@index([lineAccountId, lastMessageAt(sort: Desc)])
+  @@index([isPinned, lastMessageAt(sort: Desc)])
+  @@index([isArchived])
+  @@index([status])
+  @@map("conversations")
+}
+
+enum ConversationStatus {
+  ACTIVE
+  ARCHIVED
+  BLOCKED
+}
+
+// ============================================
+// Messages
+// ============================================
+
+model Message {
+  id               String         @id @default(cuid())
+  lineAccountId    String         @map("line_account_id")
+  conversationId   String         @map("conversation_id")
+  lineMessageId    String?        @unique @map("line_message_id")
+  source           MessageSource
+  type             MessageType
+  textContent      String?        @map("text_content")
+  textNormalized   String?        @map("text_normalized")
+  stickerPackageId String?        @map("sticker_package_id")
+  stickerId        String?        @map("sticker_id")
+  latitude         Float?
+  longitude        Float?
+  address          String?
+  deliveryStatus   DeliveryStatus @default(PENDING) @map("delivery_status")
+  lineTimestamp    DateTime?      @map("line_timestamp")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  metadata         Json?
+
+  // Admin sender tracking
+  sentByAdminId String? @map("sent_by_admin_id")
+  sentByName    String? @map("sent_by_name")
+
+  // Full-text search vector (managed via raw SQL migration)
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  conversation Conversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  lineAccount  LineAccount         @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+  sentByAdmin  AdminUser?          @relation(fields: [sentByAdminId], references: [id], onDelete: SetNull)
+  attachments  MessageAttachment[]
+
+  @@index([lineAccountId])
+  @@index([conversationId, createdAt(sort: Desc)])
+  @@index([conversationId, lineTimestamp(sort: Desc)])
+  @@index([source])
+  @@index([type])
+  @@index([deliveryStatus])
+  @@index([createdAt(sort: Desc)])
+  @@index([sentByAdminId])
+  @@map("messages")
+}
+
+enum MessageSource {
+  INBOUND
+  OUTBOUND
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+  STICKER
+  LOCATION
+  FLEX
+  TEMPLATE
+  UNKNOWN
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+// ============================================
+// Attachments & Media
+// ============================================
+
+model MessageAttachment {
+  id               String           @id @default(cuid())
+  messageId        String           @map("message_id")
+  type             AttachmentType
+  processingStatus ProcessingStatus @default(PENDING) @map("processing_status")
+
+  // Original file info
+  originalFilename String? @map("original_filename")
+  originalMimeType String? @map("original_mime_type")
+  originalSize     Int?    @map("original_size")
+  originalWidth    Int?    @map("original_width")
+  originalHeight   Int?    @map("original_height")
+
+  // Optimized file info
+  optimizedMimeType String? @map("optimized_mime_type")
+  optimizedSize     Int?    @map("optimized_size")
+  optimizedWidth    Int?    @map("optimized_width")
+  optimizedHeight   Int?    @map("optimized_height")
+
+  // R2 storage keys
+  r2KeyOriginal  String? @map("r2_key_original")
+  r2KeyOptimized String? @map("r2_key_optimized")
+  r2KeyThumbnail String? @map("r2_key_thumbnail")
+  r2KeyPreview   String? @map("r2_key_preview")
+
+  // Duration for audio/video
+  durationMs Int? @map("duration_ms")
+
+  // Extracted text (OCR/transcription)
+  extractedText String? @map("extracted_text")
+
+  // Integrity
+  checksum     String?
+  errorMessage String? @map("error_message")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@index([processingStatus])
+  @@index([type])
+  @@map("message_attachments")
+}
+
+enum AttachmentType {
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ============================================
+// Raw Events
+// ============================================
+
+model RawEvent {
+  id             String    @id @default(cuid())
+  webhookEventId String?   @unique @map("webhook_event_id")
+  eventType      String    @map("event_type")
+  source         Json?
+  payload        Json
+  processedAt    DateTime? @map("processed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([createdAt(sort: Desc)])
+  @@map("raw_events")
+}
+
+// ============================================
+// Outbound Requests
+// ============================================
+
+model OutboundRequest {
+  id            String         @id @default(cuid())
+  lineAccountId String         @map("line_account_id")
+  messageId     String?        @map("message_id")
+  lineUserId    String         @map("line_user_id")
+  requestType   String         @map("request_type")
+  payload       Json
+  status        OutboundStatus @default(QUEUED)
+  attempts      Int            @default(0)
+  lastAttemptAt DateTime?      @map("last_attempt_at")
+  errorMessage  String?        @map("error_message")
+  lineResponse  Json?          @map("line_response")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  lineAccount LineAccount @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+
+  @@index([lineAccountId])
+  @@index([status])
+  @@index([messageId])
+  @@index([createdAt(sort: Desc)])
+  @@map("outbound_requests")
+}
+
+enum OutboundStatus {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+  RETRYING
+}
+
+// ============================================
+// Notes
+// ============================================
+
+model Note {
+  id             String   @id @default(cuid())
+  conversationId String   @map("conversation_id")
+  content        String   @db.Text
+  createdByName  String?  @map("created_by_name")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@map("notes")
+}
+
+// ============================================
+// Audit Log
+// ============================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  adminUserId String?  @map("admin_user_id")
+  action      String
+  resource    String?
+  resourceId  String?  @map("resource_id")
+  details     Json?
+  ipAddress   String?  @map("ip_address")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([adminUserId])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+// ============================================
+// Tags (for Contacts)
+// ============================================
+
+model Tag {
+  id            String   @id @default(cuid())
+  name          String
+  color         String   @default("#6366f1")
+  lineAccountId String?  @map("line_account_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  contacts    ContactTag[]
+  lineAccount LineAccount? @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([lineAccountId, name])
+  @@map("tags")
+}
+
+model ContactTag {
+  id        String   @id @default(cuid())
+  contactId String   @map("contact_id")
+  tagId     String   @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([contactId, tagId])
+  @@index([contactId])
+  @@index([tagId])
+  @@map("contact_tags")
+}
+
+// ============================================
+// Labels (for Conversations)
+// ============================================
+
+model Label {
+  id            String   @id @default(cuid())
+  name          String
+  color         String   @default("#10b981")
+  lineAccountId String?  @map("line_account_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  conversations ConversationLabel[]
+  lineAccount   LineAccount?        @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([lineAccountId, name])
+  @@map("labels")
+}
+
+model ConversationLabel {
+  id             String   @id @default(cuid())
+  conversationId String   @map("conversation_id")
+  labelId        String   @map("label_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  label        Label        @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, labelId])
+  @@index([conversationId])
+  @@index([labelId])
+  @@map("conversation_labels")
+}
+
+// ============================================
+// Quick Replies
+// ============================================
+
+model QuickReply {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String?
+  shortcut  String?
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, category])
+  @@map("quick_replies")
+}
+
+// ============================================
+// Admin Channel Access (per-admin channel restriction)
+// ============================================
+
+model AdminChannelAccess {
+  id            String   @id @default(cuid())
+  adminUserId   String   @map("admin_user_id")
+  lineAccountId String   @map("line_account_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  adminUser   AdminUser   @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  lineAccount LineAccount @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([adminUserId, lineAccountId])
+  @@index([adminUserId])
+  @@index([lineAccountId])
+  @@map("admin_channel_access")
+}
+
+// ============================================
+// Notifications
+// ============================================
+
+model Notification {
+  id               String    @id @default(cuid())
+  adminUserId      String    @map("admin_user_id")
+  type             String // e.g., "NEW_CONVERSATION", "MENTION", "SYSTEM"
+  title            String
+  message          String?   @db.Text
+  isRead           Boolean   @default(false) @map("is_read")
+  referenceId      String?   @map("reference_id") // e.g., Conversation ID
+  metadata         Json?     @db.Json
+  claimedByAdminId String?   @map("claimed_by_admin_id")
+  claimedByName    String?   @map("claimed_by_name")
+  claimedAt        DateTime? @map("claimed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  adminUser      AdminUser  @relation("NotificationOwner", fields: [adminUserId], references: [id], onDelete: Cascade)
+  claimedByAdmin AdminUser? @relation("NotificationClaimer", fields: [claimedByAdminId], references: [id])
+
+  @@index([adminUserId, isRead])
+  @@index([createdAt(sort: Desc)])
+  @@index([referenceId])
+  @@map("notifications")
+}
+
+// ============================================
+// Web Push Subscriptions
+// ============================================
+
+model PushSubscription {
+  id          String   @id @default(cuid())
+  adminUserId String   @map("admin_user_id")
+  endpoint    String   @unique
+  p256dh      String
+  auth        String
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@map("push_subscriptions")
+}
+
+// ============================================
+// Broadcasts (Multicast / Broadcast)
+// ============================================
+
+model Broadcast {
+  id            String          @id @default(cuid())
+  lineAccountId String          @map("line_account_id")
+  createdById   String          @map("created_by_id")
+  name          String
+  messageType   String          @default("TEXT") @map("message_type")
+  messagePayload Json           @map("message_payload")
+  audienceType  String          @default("ALL") @map("audience_type")
+  audienceFilter Json?          @map("audience_filter")
+  status        BroadcastStatus @default(DRAFT)
+  scheduledAt   DateTime?       @map("scheduled_at")
+  sentAt        DateTime?       @map("sent_at")
+  totalRecipients Int           @default(0) @map("total_recipients")
+  successCount  Int             @default(0) @map("success_count")
+  failCount     Int             @default(0) @map("fail_count")
+  errorMessage  String?        @map("error_message")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  lineAccount LineAccount @relation(fields: [lineAccountId], references: [id], onDelete: Cascade)
+  createdBy   AdminUser   @relation(fields: [createdById], references: [id])
+
+  @@index([lineAccountId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("broadcasts")
+}
+
+enum BroadcastStatus {
+  DRAFT
+  SENDING
+  SENT
+  FAILED
+  SCHEDULED
+}
