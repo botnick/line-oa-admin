@@ -61,7 +61,7 @@
   }
 }
 
-/* ── SSE reconnection shimmer bar ────────────────
+/* ── Socket.IO reconnection shimmer bar ──────────
  * Vertical gradient line on the right edge.
  * Phase-driven via CSS custom properties.
  * ──────────────────────────────────────────────── */

@@ -85,13 +85,16 @@ export const messagesRouter = router({
         messages.map(async (msg) => ({
           ...msg,
           attachments: await Promise.all(
-            msg.attachments.map(async (att) => ({
-              ...att,
-              thumbnailUrl: await resolveR2Url(att.r2KeyThumbnail),
-              previewUrl: await resolveR2Url(att.r2KeyPreview),
-              originalUrl: await resolveR2Url(att.r2KeyOriginal),
-            }))
-          ),
+            msg.attachments.map(async (att) => {
+              // New images: single r2KeyOriginal. Old images: may have separate keys.
+              const mainUrl = await resolveR2Url(att.r2KeyOriginal);
+              return {
+                ...att,
+                thumbnailUrl: await resolveR2Url(att.r2KeyThumbnail) || mainUrl,
+                previewUrl: await resolveR2Url(att.r2KeyPreview) || mainUrl,
+                originalUrl: mainUrl,
+              };
+            })),
         }))
       );
 

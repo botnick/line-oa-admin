@@ -696,7 +696,8 @@
   }
 
   .headerTitle { font-size: 17px; }
-  .closeBtn { width: 36px; height: 36px; }
+  /* Touch targets ≥ 44px */
+  .closeBtn { width: 44px; height: 44px; }
 
   .profileCard { padding: 28px 20px 24px; }
   .avatar { width: 80px; height: 80px; margin-bottom: 14px; }
@@ -705,7 +706,7 @@
   .metaRow { font-size: 12px; gap: 8px; margin-top: 8px; }
 
   .tabs { padding: 0 12px; }
-  .tab { padding: 12px 6px; font-size: 13px; gap: 6px; }
+  .tab { padding: 14px 8px; font-size: 13px; gap: 6px; min-height: 44px; }
 
   .tabContent { padding: 16px 20px; -webkit-overflow-scrolling: touch; }
   .section { gap: 14px; }
@@ -716,18 +717,20 @@
   .labelChipAdd { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
 
   .chipDot { width: 8px; height: 8px; }
-  .chipRemove { width: 22px; height: 22px; }
-  .labelRemove { width: 22px; height: 22px; }
+  .chipRemove { width: 32px; height: 32px; }
+  .labelRemove { width: 32px; height: 32px; }
+
+  .editNameBtn { min-width: 44px; min-height: 44px; padding: 8px; }
 
   .createFormRow { gap: 10px; }
   .inlineInput { padding: 10px 14px; font-size: 14px; border-radius: 10px; }
-  .inlineBtn { width: 36px; height: 36px; border-radius: 10px; }
+  .inlineBtn { width: 44px; height: 44px; border-radius: 10px; }
 
   .noteTextarea { padding: 12px 14px; font-size: 14px; min-height: 80px; border-radius: 10px; }
   .noteSubmit { padding: 10px 20px; font-size: 14px; border-radius: 8px; }
   .noteCard { padding: 14px 16px; border-radius: 10px; }
   .noteContent { font-size: 13px; }
-  .noteDelete { width: 28px; height: 28px; }
+  .noteDelete { width: 36px; height: 36px; }
   .emptyNote { font-size: 13px; padding: 28px 0; }
 }
 

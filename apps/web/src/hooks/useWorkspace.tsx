@@ -52,7 +52,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState(false);
 
   const { data: accounts = [], isLoading, isError } = trpc.lineAccounts.list.useQuery(undefined, {
-    staleTime: 0, // Must be 0 for instant SSE-driven access revocation
+    staleTime: 0, // Must be 0 for instant Socket.IO-driven access revocation
     retry: 1,
   });
 

@@ -189,14 +189,35 @@ export const lineAccountsRouter = router({
       };
     }),
 
-  /** Delete LINE account — SUPER_ADMIN only */
+  /** Toggle active status — SUPER_ADMIN only */
+  toggleActive: superAdminProcedure
+    .input(z.object({ id: z.string(), isActive: z.boolean() }))
+    .mutation(async ({ input }) => {
+      await prisma.lineAccount.update({
+        where: { id: input.id },
+        data: { isActive: input.isActive },
+      });
+      return { success: true };
+    }),
+
+  /** Soft-delete LINE account (set isActive=false) — SUPER_ADMIN only */
   delete: superAdminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
-      // Soft delete: set isActive = false instead of hard delete
       await prisma.lineAccount.update({
         where: { id: input.id },
         data: { isActive: false },
+      });
+      return { success: true };
+    }),
+
+  /** Hard-delete LINE account — SUPER_ADMIN only */
+  hardDelete: superAdminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      // Permanently remove from database (cascades to conversations, messages, etc.)
+      await prisma.lineAccount.delete({
+        where: { id: input.id },
       });
       return { success: true };
     }),

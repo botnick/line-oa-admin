@@ -173,4 +173,7 @@
     right: 0;
     left: auto;
   }
+  /* Touch targets */
+  .trigger { height: 2.25rem; }
+  .dropdownItem { padding: 12px var(--space-3); min-height: 44px; }
 }

@@ -447,3 +447,14 @@
   margin-left: 2px;
 }
 
+/* ─── Mobile touch targets ─── */
+@media (max-width: 767px) {
+  .filterTab { padding: 8px 14px; font-size: 13px; min-height: 36px; }
+  .filterPill { padding: 8px 14px; font-size: 13px; min-height: 36px; }
+  .searchClear { width: 36px; height: 36px; }
+  .filterToggleBtn { min-height: 36px; min-width: 36px; padding: 6px 10px; }
+  .activeFilterClear { min-width: 28px; min-height: 28px; padding: 4px; }
+  .clearAllFilters { padding: 8px 12px; font-size: 12px; }
+  .viewModeBtn { padding: 8px 0; font-size: 13px; }
+}
+

@@ -33,6 +33,13 @@ async function lineRequest(path: string, options: LineApiOptions) {
     throw new Error(`LINE API Error: ${res.status}`);
   }
 
+  // Some endpoints (e.g. /chat/markAsRead) return empty body
+  const contentType = res.headers.get('content-type') || '';
+  const contentLength = res.headers.get('content-length');
+  if (contentLength === '0' || !contentType.includes('application/json')) {
+    return {};
+  }
+
   return res.json();
 }
 
@@ -106,6 +113,19 @@ export async function broadcastMessage(messages: unknown[], token: string) {
   return lineRequest('/message/broadcast', {
     method: 'POST',
     body: { messages },
+    token,
+  });
+}
+
+/**
+ * Mark messages as read in LINE chat.
+ * Requires Chat feature to be ON in LINE Official Account Manager.
+ * Token comes from webhook message event's markAsReadToken property (never expires).
+ */
+export async function markAsRead(markAsReadToken: string, token: string) {
+  return lineRequest('/chat/markAsRead', {
+    method: 'POST',
+    body: { markAsReadToken },
     token,
   });
 }

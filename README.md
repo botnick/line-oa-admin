@@ -46,7 +46,7 @@ MIT License
 
 | ฟีเจอร์ | รายละเอียด |
 |---------|-----------|
-| **Inbox** | ตอบแชท Realtime ผ่าน SSE ส่งข้อความ รูป สติกเกอร์ ไฟล์ได้ |
+| **Inbox** | ตอบแชท Realtime ผ่าน Socket.IO ส่งข้อความ รูป สติกเกอร์ ไฟล์ได้ |
 | **Search** | ค้นหาข้อความ + รายชื่อ กดจากผลค้นหากระโดดไปข้อความนั้นได้เลย ใช้ PostgreSQL Full-Text Search |
 | **Contacts** | รายชื่อลูกค้า ติด Tag กรอง Follow/Unfollow |
 | **Overview** | สรุปสถิติ 7 วัน + Activity Feed (infinite scroll) |
@@ -60,7 +60,7 @@ MIT License
 | **In-App Notifications** | กระดิ่งแจ้งเตือนในแอป + claim notification |
 | **PWA** | ใช้บนมือถือเหมือนแอป เซฟหน้าจอได้เลย |
 | **Dark Mode** | สลับ Light/Dark ใน Settings |
-| **Broadcast** | ส่งข้อความหาลูกค้าหลายคนพร้อมกัน (backend พร้อม, UI มี) |
+| **Read Receipts** | ส่ง read receipt กลับ LINE เมื่อ admin อ่านข้อความ |
 | **Audit Log** | บันทึกการกระทำทุกอย่างของ admin |
 
 ---
@@ -251,7 +251,9 @@ https://<โดเมน>/api/webhook/line
 
 ## สิ่งที่ระบบทำให้อัตโนมัติ
 
-- **เก็บรูป/วิดีโอ/ไฟล์ลง R2** → ลูกค้าส่งรูปมา ระบบก็อปไปเก็บใน Cloudflare R2 ทันที (BullMQ job queue) เปิดดูได้ถาวร ไม่หมดอายุ
+- **เก็บรูป/วิดีโอ/ไฟล์ลง R2** → ลูกค้าส่งรูปมา ระบบก็อปไปเก็บใน Cloudflare R2 ทันที (BullMQ job queue) เปิดดูได้ถาวร ไม่หมดอายุ รูปโดน optimize เป็น WebP ไฟล์เดียว ประหยัด storage ~70%
+- **Avatar Dedup** → รูปโปรไฟล์ลูกค้าเก็บ fixed key ต่อคน (`avatars/{userId}.webp`) ไม่สะสมไฟล์เก่า
+- **Read Receipt** → admin อ่านข้อความ ระบบส่ง mark-as-read กลับ LINE อัตโนมัติ
 - **สร้าง Contact อัตโนมัติ** → ลูกค้าทักมาครั้งแรก ระบบสร้าง contact + conversation ให้เลย
 - **อัปเดต Follow/Unfollow** → ลูกค้า follow/unfollow LINE OA ระบบจับ event อัปเดตสถานะให้
 - **คนแรก = Super Admin** → ไม่ต้องตั้ง admin ด้วยมือ ล็อกอินคนแรกได้เป็น Super Admin เลย
@@ -268,7 +270,7 @@ https://<โดเมน>/api/webhook/line
 | **โควต้าข้อความ** | แพ็กเกจฟรี (Communication) ส่งได้ **200 ข้อความ/เดือน** นับเฉพาะขาออก (Push/Reply) ถ้าแชทเยอะต้องอัปเกรดแพ็กเกจฝั่ง LINE |
 | **Content หมดอายุ** | รูป/วิดีโอ/ไฟล์ที่ลูกค้าส่ง ดาวน์โหลดจาก LINE API ได้แค่ **~14 วัน** ระบบนี้เลยก๊อปไป R2 ให้อัตโนมัติ |
 | **Webhook ต้อง HTTPS** | LINE บังคับ HTTPS ทั้ง Webhook URL และ LINE Login Callback ตอน dev ใช้ ngrok/Cloudflare Tunnel |
-| **ไม่มี Read Receipt API** | ดูไม่ได้ว่าลูกค้าอ่านข้อความหรือยัง (LINE ไม่เปิดให้) |
+| **ไม่มี Read Receipt จากลูกค้า** | ดูไม่ได้ว่าลูกค้าอ่านข้อความหรือยัง (LINE ไม่เปิดให้) แต่ส่ง read receipt ฝั่ง admin ได้ |
 | **LINE Login ต้อง HTTPS** | Callback URL ต้อง HTTPS เท่านั้น localhost ธรรมดาใช้ไม่ได้ |
 | **Sticker Content Agreement** | สติกเกอร์บางตัวแสดงไม่ได้ถ้าไม่ได้ยอมรับ Content Agreement ใน LINE Developers Console |
 
@@ -351,7 +353,7 @@ line-oa-admin/
 | UI | React + Framer Motion + Lucide Icons | 19 |
 | API Layer | tRPC + TanStack React Query | 11 / 5 |
 | Database | PostgreSQL + Prisma ORM | 16 / 7 |
-| Realtime | SSE (Server-Sent Events) + Redis Pub/Sub | — |
+| Realtime | Socket.IO + Redis Pub/Sub | 4 |
 | Storage | Cloudflare R2 (S3-compatible) + Sharp | — |
 | Queue | BullMQ + Redis | 5 / 7 |
 | Auth | LINE Login + jose (JWT) | — |

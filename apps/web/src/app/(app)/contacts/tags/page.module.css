@@ -2,13 +2,14 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: var(--bg-dashboard);
+  height: 100dvh;
+  background: var(--bg-dashboard, #f5f6fa);
 }
 
 .header {
-  padding: var(--space-4) var(--space-6);
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-surface);
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color, #e4e6eb);
+  background: var(--bg-surface, #fff);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,91 +18,243 @@
 .titleWrapper {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 12px;
 }
 
 .backButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: none;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #65676b);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
-
 .backButton:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: var(--bg-hover, #f2f3f5);
+  color: var(--text-primary, #050505);
 }
 
 .title {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--text-primary, #050505);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 8px;
   margin: 0;
 }
 
+/* ── Content ───────────────────── */
 .content {
   flex: 1;
-  padding: var(--space-6);
+  padding: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 1200px;
+  gap: 24px;
+  max-width: 800px;
   margin: 0 auto;
   width: 100%;
 }
 
+/* ── Section Card ──────────────── */
 .section {
-  background: var(--bg-surface);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
+  background: var(--bg-surface, #fff);
+  border-radius: 16px;
+  border: 1px solid var(--border-color, #e4e6eb);
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .sectionHeader {
-  padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid var(--border-color);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color, #e4e6eb);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+}
+
+.sectionTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sectionIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sectionIconTag {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+.sectionIconLabel {
+  background: #ecfdf5;
+  color: #10b981;
 }
 
 .sectionTitle {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-primary, #050505);
   margin: 0;
 }
 
+.sectionDesc {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #65676b);
+  margin: 2px 0 0;
+}
+
+/* ── Add Button ────────────────── */
 .addButton {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-primary, #06c755);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
-
 .addButton:hover {
-  background: var(--bg-hover);
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(6, 199, 85, 0.3);
+}
+.addButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
+/* ── Inline Form ───────────────── */
+.inlineForm {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color, #e4e6eb);
+  background: var(--bg-hover, #f8f9fa);
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.colorDot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  transition: background-color 0.2s ease;
+}
+
+.formInput {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color, #e4e6eb);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  background: var(--bg-surface, #fff);
+  color: var(--text-primary, #050505);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.formInput:focus {
+  border-color: var(--color-primary, #06c755);
+  box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.1);
+}
+.formInput::placeholder {
+  color: var(--text-secondary, #999);
+}
+
+.formSave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-primary, #06c755);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.formSave:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+.formSave:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.formCancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #65676b);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.formCancel:hover {
+  background: var(--bg-hover, #f2f3f5);
+}
+
+/* ── Color Palette ─────────────── */
+.colorPalette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  padding-left: 34px;
+}
+
+.colorSwatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  outline: none;
+}
+.colorSwatch:hover {
+  transform: scale(1.2);
+}
+.colorSwatchActive {
+  border-color: var(--text-primary, #050505);
+  box-shadow: 0 0 0 2px var(--bg-surface, #fff), 0 0 0 3px currentColor;
+  transform: scale(1.15);
+}
+
+/* ── List ──────────────────────── */
 .list {
   padding: 0;
   margin: 0;
@@ -112,74 +265,275 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) var(--space-5);
-  border-bottom: 1px solid var(--border-color);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color, #e4e6eb);
+  transition: background-color 0.1s ease;
+  min-height: 54px;
 }
-
 .item:last-child {
   border-bottom: none;
+}
+.item:hover {
+  background: var(--bg-hover, #f8f9fa);
 }
 
 .itemLeft {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
 }
 
-.colorPreview {
-  width: 16px;
-  height: 16px;
+/* ── Tag Chip ──────────────────── */
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.colorDotSmall {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.itemName {
-  font-size: 0.9375rem;
-  color: var(--text-primary);
-  font-weight: 500;
+  flex-shrink: 0;
 }
 
 .itemCount {
   font-size: 0.75rem;
-  color: var(--text-secondary);
-  background: var(--bg-hover);
-  padding: 2px 8px;
-  border-radius: 12px;
+  color: var(--text-secondary, #65676b);
+  white-space: nowrap;
 }
 
+/* ── Action Buttons ────────────── */
 .itemActions {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 2px;
+  opacity: 0.4;
+  transition: opacity 0.15s ease;
+}
+.item:hover .itemActions {
+  opacity: 1;
 }
 
 .actionButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   border: none;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #65676b);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
-
 .actionButton:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: var(--bg-hover, #f2f3f5);
+  color: var(--text-primary, #050505);
 }
-
 .actionButton.delete:hover {
   background: #fff1f0;
   color: #ff4d4f;
 }
 
+/* ── Empty State ───────────────── */
 .empty {
-  padding: var(--space-8);
+  padding: 40px 20px;
   text-align: center;
-  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary, #999);
+}
+.empty p {
   font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary, #050505);
+  margin: 8px 0 0;
+}
+.empty span {
+  font-size: 0.8125rem;
+}
+
+/* ── Shimmer Loading ───────────── */
+.loadingList {
+  padding: 0;
+}
+.shimmerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color, #e4e6eb);
+}
+.shimmerRow:last-child {
+  border-bottom: none;
+}
+.shimmerDot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.shimmerText {
+  height: 16px;
+  width: 140px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Confirm Dialog ────────────── */
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.15s ease;
+}
+
+.dialog {
+  background: var(--bg-surface, #fff);
+  border-radius: 16px;
+  padding: 28px 24px 20px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: slideUp 0.2s ease;
+}
+
+.dialogIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff7ed;
+  color: #f97316;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.dialogText {
+  font-size: 0.9375rem;
+  color: var(--text-primary, #050505);
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.dialogActions {
+  display: flex;
+  gap: 10px;
+}
+
+.dialogCancel {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, #e4e6eb);
+  background: var(--bg-surface, #fff);
+  color: var(--text-primary, #050505);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.dialogCancel:hover {
+  background: var(--bg-hover, #f2f3f5);
+}
+
+.dialogConfirm {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.dialogConfirm:hover {
+  background: #ff3538;
+}
+.dialogConfirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Mobile Responsive ─────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+  }
+  .title {
+    font-size: 1.1rem;
+  }
+  .content {
+    padding: 16px;
+    gap: 16px;
+  }
+  .section {
+    border-radius: 12px;
+  }
+  .sectionHeader {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .addButton span {
+    display: none;
+  }
+  .addButton {
+    padding: 8px 10px;
+  }
+  .item {
+    padding: 10px 16px;
+  }
+  .inlineForm {
+    padding: 10px 16px;
+  }
+  .colorPalette {
+    padding-left: 0;
+  }
+  .itemActions {
+    opacity: 1;
+  }
+  .actionButton {
+    width: 44px;
+    height: 44px;
+  }
 }

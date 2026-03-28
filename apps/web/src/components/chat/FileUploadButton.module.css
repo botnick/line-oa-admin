@@ -187,3 +187,12 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* ─── Mobile touch targets ─── */
+@media (max-width: 767px) {
+  .btn { width: 44px; height: 44px; }
+  .closeBtn { width: 44px; height: 44px; }
+  .cancelBtn { padding: 12px 20px; font-size: 14px; }
+  .sendBtn { padding: 12px 24px; font-size: 14px; }
+  .modalActions { padding: 16px; gap: 10px; }
+}

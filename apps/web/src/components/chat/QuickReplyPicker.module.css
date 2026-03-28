@@ -261,7 +261,9 @@
     font-size: 13px;
     gap: 6px;
   }
-  .closeBtn { width: 32px; height: 32px; }
+  /* Touch targets ≥ 44px */
+  .closeBtn { width: 44px; height: 44px; }
+  .searchClear { width: 36px; height: 36px; }
 
   .searchBar { padding: 8px 12px; }
   .searchInput { font-size: 13px; }

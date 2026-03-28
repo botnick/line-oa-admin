@@ -358,3 +358,10 @@
 }
 
 /* We removed the static dark-mode overrides in favor of pure CSS variables everywhere */
+
+/* ─── Mobile touch targets ─── */
+@media (max-width: 767px) {
+  .navBtn { width: 2.75rem; height: 2.75rem; }
+  .closeBtn { width: 2.75rem; height: 2.75rem; }
+  .resultItem { padding: var(--space-3, 0.75rem); }
+}

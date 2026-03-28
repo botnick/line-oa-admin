@@ -190,10 +190,11 @@
     border-radius: 16px 16px 0 0;
   }
 
-  .modeTab { padding: 10px 16px; font-size: 13px; gap: 6px; }
-  .closeBtn { width: 32px; height: 32px; }
+  /* Touch targets ≥ 44px */
+  .modeTab { padding: 10px 16px; font-size: 13px; gap: 6px; min-height: 44px; }
+  .closeBtn { width: 44px; height: 44px; }
 
-  .subTab { width: 40px; height: 40px; }
+  .subTab { width: 44px; height: 44px; }
   .subTabImg { width: 32px; height: 32px; }
 
   .stickerGrid {

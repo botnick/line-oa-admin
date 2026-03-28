@@ -11732,6 +11732,7 @@ export namespace Prisma {
     lineTimestamp: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    markAsReadToken: string | null
     sentByAdminId: string | null
     sentByName: string | null
   }
@@ -11754,6 +11755,7 @@ export namespace Prisma {
     lineTimestamp: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    markAsReadToken: string | null
     sentByAdminId: string | null
     sentByName: string | null
   }
@@ -11777,6 +11779,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     metadata: number
+    markAsReadToken: number
     sentByAdminId: number
     sentByName: number
     _all: number
@@ -11811,6 +11814,7 @@ export namespace Prisma {
     lineTimestamp?: true
     createdAt?: true
     updatedAt?: true
+    markAsReadToken?: true
     sentByAdminId?: true
     sentByName?: true
   }
@@ -11833,6 +11837,7 @@ export namespace Prisma {
     lineTimestamp?: true
     createdAt?: true
     updatedAt?: true
+    markAsReadToken?: true
     sentByAdminId?: true
     sentByName?: true
   }
@@ -11856,6 +11861,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     metadata?: true
+    markAsReadToken?: true
     sentByAdminId?: true
     sentByName?: true
     _all?: true
@@ -11966,6 +11972,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     metadata: JsonValue | null
+    markAsReadToken: string | null
     sentByAdminId: string | null
     sentByName: string | null
     _count: MessageCountAggregateOutputType | null
@@ -12008,6 +12015,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     metadata?: boolean
+    markAsReadToken?: boolean
     sentByAdminId?: boolean
     sentByName?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
@@ -12036,6 +12044,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     metadata?: boolean
+    markAsReadToken?: boolean
     sentByAdminId?: boolean
     sentByName?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
@@ -12062,6 +12071,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     metadata?: boolean
+    markAsReadToken?: boolean
     sentByAdminId?: boolean
     sentByName?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
@@ -12088,11 +12098,12 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     metadata?: boolean
+    markAsReadToken?: boolean
     sentByAdminId?: boolean
     sentByName?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lineAccountId" | "conversationId" | "lineMessageId" | "source" | "type" | "textContent" | "textNormalized" | "stickerPackageId" | "stickerId" | "latitude" | "longitude" | "address" | "deliveryStatus" | "lineTimestamp" | "createdAt" | "updatedAt" | "metadata" | "sentByAdminId" | "sentByName", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lineAccountId" | "conversationId" | "lineMessageId" | "source" | "type" | "textContent" | "textNormalized" | "stickerPackageId" | "stickerId" | "latitude" | "longitude" | "address" | "deliveryStatus" | "lineTimestamp" | "createdAt" | "updatedAt" | "metadata" | "markAsReadToken" | "sentByAdminId" | "sentByName", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     lineAccount?: boolean | LineAccountDefaultArgs<ExtArgs>
@@ -12138,6 +12149,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       metadata: Prisma.JsonValue | null
+      markAsReadToken: string | null
       sentByAdminId: string | null
       sentByName: string | null
     }, ExtArgs["result"]["message"]>
@@ -12585,6 +12597,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Message", 'DateTime'>
     readonly updatedAt: FieldRef<"Message", 'DateTime'>
     readonly metadata: FieldRef<"Message", 'Json'>
+    readonly markAsReadToken: FieldRef<"Message", 'String'>
     readonly sentByAdminId: FieldRef<"Message", 'String'>
     readonly sentByName: FieldRef<"Message", 'String'>
   }
@@ -28976,6 +28989,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     metadata: 'metadata',
+    markAsReadToken: 'markAsReadToken',
     sentByAdminId: 'sentByAdminId',
     sentByName: 'sentByName'
   };
@@ -30085,6 +30099,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     metadata?: JsonNullableFilter<"Message">
+    markAsReadToken?: StringNullableFilter<"Message"> | string | null
     sentByAdminId?: StringNullableFilter<"Message"> | string | null
     sentByName?: StringNullableFilter<"Message"> | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
@@ -30112,6 +30127,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     metadata?: SortOrderInput | SortOrder
+    markAsReadToken?: SortOrderInput | SortOrder
     sentByAdminId?: SortOrderInput | SortOrder
     sentByName?: SortOrderInput | SortOrder
     conversation?: ConversationOrderByWithRelationInput
@@ -30142,6 +30158,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     metadata?: JsonNullableFilter<"Message">
+    markAsReadToken?: StringNullableFilter<"Message"> | string | null
     sentByAdminId?: StringNullableFilter<"Message"> | string | null
     sentByName?: StringNullableFilter<"Message"> | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
@@ -30169,6 +30186,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     metadata?: SortOrderInput | SortOrder
+    markAsReadToken?: SortOrderInput | SortOrder
     sentByAdminId?: SortOrderInput | SortOrder
     sentByName?: SortOrderInput | SortOrder
     _count?: MessageCountOrderByAggregateInput
@@ -30200,6 +30218,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     metadata?: JsonNullableWithAggregatesFilter<"Message">
+    markAsReadToken?: StringNullableWithAggregatesFilter<"Message"> | string | null
     sentByAdminId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     sentByName?: StringNullableWithAggregatesFilter<"Message"> | string | null
   }
@@ -31978,6 +31997,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     lineAccount: LineAccountCreateNestedOneWithoutMessagesInput
@@ -32004,6 +32024,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
@@ -32026,6 +32047,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     lineAccount?: LineAccountUpdateOneRequiredWithoutMessagesNestedInput
@@ -32052,6 +32074,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
@@ -32076,6 +32099,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
   }
@@ -32097,6 +32121,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -32119,6 +32144,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -34081,6 +34107,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     metadata?: SortOrder
+    markAsReadToken?: SortOrder
     sentByAdminId?: SortOrder
     sentByName?: SortOrder
   }
@@ -34108,6 +34135,7 @@ export namespace Prisma {
     lineTimestamp?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    markAsReadToken?: SortOrder
     sentByAdminId?: SortOrder
     sentByName?: SortOrder
   }
@@ -34130,6 +34158,7 @@ export namespace Prisma {
     lineTimestamp?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    markAsReadToken?: SortOrder
     sentByAdminId?: SortOrder
     sentByName?: SortOrder
   }
@@ -36937,6 +36966,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     lineAccount: LineAccountCreateNestedOneWithoutMessagesInput
@@ -36962,6 +36992,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
   }
@@ -37277,6 +37308,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     metadata?: JsonNullableFilter<"Message">
+    markAsReadToken?: StringNullableFilter<"Message"> | string | null
     sentByAdminId?: StringNullableFilter<"Message"> | string | null
     sentByName?: StringNullableFilter<"Message"> | string | null
   }
@@ -37616,6 +37648,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     sentByAdmin?: AdminUserCreateNestedOneWithoutSentMessagesInput
@@ -37640,6 +37673,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
@@ -38353,6 +38387,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
     lineAccount: LineAccountCreateNestedOneWithoutMessagesInput
     sentByAdmin?: AdminUserCreateNestedOneWithoutSentMessagesInput
@@ -38377,6 +38412,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
@@ -39034,6 +39070,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     lineAccount: LineAccountCreateNestedOneWithoutMessagesInput
@@ -39059,6 +39096,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
   }
@@ -39096,6 +39134,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     lineAccount?: LineAccountUpdateOneRequiredWithoutMessagesNestedInput
@@ -39121,6 +39160,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -40823,6 +40863,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByName?: string | null
   }
 
@@ -40972,6 +41013,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     lineAccount?: LineAccountUpdateOneRequiredWithoutMessagesNestedInput
@@ -40997,6 +41039,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
   }
@@ -41020,6 +41063,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -41273,6 +41317,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
   }
@@ -41402,6 +41447,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     sentByAdmin?: AdminUserUpdateOneWithoutSentMessagesNestedInput
@@ -41426,6 +41472,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
@@ -41449,6 +41496,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -41755,6 +41803,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: string | null
     sentByAdminId?: string | null
     sentByName?: string | null
   }
@@ -41790,6 +41839,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     lineAccount?: LineAccountUpdateOneRequiredWithoutMessagesNestedInput
     sentByAdmin?: AdminUserUpdateOneWithoutSentMessagesNestedInput
@@ -41814,6 +41864,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
@@ -41837,6 +41888,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    markAsReadToken?: NullableStringFieldUpdateOperationsInput | string | null
     sentByAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     sentByName?: NullableStringFieldUpdateOperationsInput | string | null
   }

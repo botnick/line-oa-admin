@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, Fragment } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   Bell, CheckCheck, BellRing, BellOff,
   MoreHorizontal, Trash2, Eye, EyeOff, X, Check, Settings,
@@ -170,35 +170,28 @@ export function NotificationBell() {
     },
   });
 
-  /* ── Positioning ───────────────── */
+  /* ── Positioning (desktop only — mobile uses CSS inset: 0) ── */
   const updatePosition = useCallback(() => {
     if (!buttonRef.current || !dropdownRef.current) return;
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return; // CSS handles full-screen on mobile
+
     const rect = buttonRef.current.getBoundingClientRect();
     const dd = dropdownRef.current;
-    const isMobile = window.innerWidth < 768;
 
-    if (isMobile) {
-      dd.style.top = `${rect.bottom + 8}px`;
-      dd.style.left = '8px';
-      dd.style.right = '8px';
-      dd.style.bottom = 'auto';
-      dd.style.width = 'auto';
-    } else {
-      dd.style.top = `${rect.top}px`;
-      dd.style.left = `${rect.right + 12}px`;
-      dd.style.right = 'auto';
-      dd.style.bottom = 'auto';
-      dd.style.width = '380px';
+    dd.style.top = `${rect.top}px`;
+    dd.style.left = `${rect.right + 12}px`;
+    dd.style.right = 'auto';
+    dd.style.bottom = 'auto';
 
-      const ddRect = dd.getBoundingClientRect();
-      if (ddRect.right > window.innerWidth - 12) {
-        dd.style.left = 'auto';
-        dd.style.right = '12px';
-      }
-      if (ddRect.bottom > window.innerHeight - 12) {
-        dd.style.top = 'auto';
-        dd.style.bottom = '12px';
-      }
+    const ddRect = dd.getBoundingClientRect();
+    if (ddRect.right > window.innerWidth - 12) {
+      dd.style.left = 'auto';
+      dd.style.right = '12px';
+    }
+    if (ddRect.bottom > window.innerHeight - 12) {
+      dd.style.top = 'auto';
+      dd.style.bottom = '12px';
     }
   }, []);
 
@@ -225,6 +218,10 @@ export function NotificationBell() {
 
   const toggleOpen = () => { setIsOpen((p) => !p); setContextMenuId(null); };
   const close = () => { setIsOpen(false); setContextMenuId(null); };
+
+  // Auto-close panel on route change (e.g. BottomNav tap)
+  const pathname = usePathname();
+  useEffect(() => { close(); }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMarkAllRead = () => markAsReadMutation.mutate({});
 
@@ -277,10 +274,10 @@ export function NotificationBell() {
             <motion.div
               ref={dropdownRef}
               className={styles.panel}
-              initial={{ opacity: 0, y: 8, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.1 } }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.1 } }}
+              transition={{ duration: 0.15 }}
             >
               {/* Header */}
               <div className={styles.panelHeader}>
@@ -357,21 +354,29 @@ export function NotificationBell() {
                                 className={styles.rowMain}
                                 onClick={() => handleNotificationClick(notif)}
                               >
-                                {/* Dual Avatar */}
+                                {/* Dual Avatar — fallback always rendered, img overlays on top */}
                                 <div className={styles.avatarWrap}>
-                                  {channelPic ? (
-                                    <img src={channelPic} alt="" className={styles.avatarBig} />
-                                  ) : (
-                                    <div className={styles.avatarBigFallback}>
-                                      <span>{accountName.charAt(0).toUpperCase()}</span>
-                                    </div>
+                                  <div className={styles.avatarBigFallback}>
+                                    <span>{accountName.charAt(0).toUpperCase()}</span>
+                                  </div>
+                                  {channelPic && (
+                                    <img
+                                      src={channelPic}
+                                      alt=""
+                                      className={styles.avatarBig}
+                                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                    />
                                   )}
-                                  {contactPic ? (
-                                    <img src={contactPic} alt="" className={styles.avatarSmall} />
-                                  ) : (
-                                    <div className={styles.avatarSmallFallback}>
-                                      <span>{initial}</span>
-                                    </div>
+                                  <div className={styles.avatarSmallFallback}>
+                                    <span>{initial}</span>
+                                  </div>
+                                  {contactPic && (
+                                    <img
+                                      src={contactPic}
+                                      alt=""
+                                      className={styles.avatarSmall}
+                                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                    />
                                   )}
                                   {/* Follow/Unfollow type badge */}
                                   {notif.type === 'FOLLOW' && (

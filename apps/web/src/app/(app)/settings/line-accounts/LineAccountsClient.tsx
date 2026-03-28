@@ -18,6 +18,9 @@ import {
   ExternalLink,
   Bot,
   BookOpen,
+  Power,
+  PowerOff,
+  AlertTriangle,
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Tooltip } from '@/components/ui/Tooltip';
@@ -85,9 +88,21 @@ export function LineAccountsClient() {
     },
   });
 
-  const deleteMutation = trpc.lineAccounts.delete.useMutation({
+  const toggleActiveMutation = trpc.lineAccounts.toggleActive.useMutation({
+    onSuccess: (_data, variables) => {
+      setStatusMsg({ type: 'success', text: variables.isActive ? '✓ เปิดใช้งาน LINE Account สำเร็จ' : '✓ ปิดใช้งาน LINE Account สำเร็จ' });
+      utils.lineAccounts.listAll.invalidate();
+      utils.lineAccounts.list.invalidate();
+      setTimeout(() => setStatusMsg(null), 4000);
+    },
+    onError: (err) => {
+      setStatusMsg({ type: 'error', text: err.message || 'ไม่สามารถเปลี่ยนสถานะได้' });
+    },
+  });
+
+  const hardDeleteMutation = trpc.lineAccounts.hardDelete.useMutation({
     onSuccess: () => {
-      setStatusMsg({ type: 'success', text: '✓ ลบ LINE Account สำเร็จ' });
+      setStatusMsg({ type: 'success', text: '✓ ลบ LINE Account ถาวรสำเร็จ' });
       setDeleteConfirmId(null);
       utils.lineAccounts.listAll.invalidate();
       utils.lineAccounts.list.invalidate();
@@ -134,9 +149,13 @@ export function LineAccountsClient() {
     }
   }, [form, modalMode, editId, createMutation, updateMutation]);
 
-  const handleDelete = useCallback((id: string) => {
-    deleteMutation.mutate({ id });
-  }, [deleteMutation]);
+  const handleToggleActive = useCallback((id: string, isActive: boolean) => {
+    toggleActiveMutation.mutate({ id, isActive });
+  }, [toggleActiveMutation]);
+
+  const handleHardDelete = useCallback((id: string) => {
+    hardDeleteMutation.mutate({ id });
+  }, [hardDeleteMutation]);
 
   const appBaseUrl = (settingsData as any)?.app?.baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
   const webhookUrl = `${appBaseUrl}/api/webhook/line`;
@@ -271,12 +290,21 @@ export function LineAccountsClient() {
                   </button>
                   <span className={styles.actionSpacer} />
                   <button
+                    className={acc.isActive ? styles.actionBtnWarning : styles.actionBtnSuccess}
+                    onClick={() => handleToggleActive(acc.id, !acc.isActive)}
+                    type="button"
+                    disabled={toggleActiveMutation.isPending}
+                  >
+                    {acc.isActive ? <PowerOff size={14} /> : <Power size={14} />}
+                    {acc.isActive ? 'ปิดใช้งาน' : 'เปิดใช้งาน'}
+                  </button>
+                  <button
                     className={styles.actionBtnDanger}
                     onClick={() => setDeleteConfirmId(acc.id)}
                     type="button"
                   >
                     <Trash2 size={14} />
-                    ลบ
+                    ลบบัญชี
                   </button>
                 </div>
               </div>
@@ -478,62 +506,108 @@ export function LineAccountsClient() {
         </div>
       )}
 
-      {/* ========== Delete Confirmation Modal ========== */}
-      {deleteConfirmId && (
-        <div className={styles.modalOverlay} onClick={() => setDeleteConfirmId(null)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>ยืนยันการลบ</h3>
-              <button
-                className={styles.modalCloseBtn}
-                onClick={() => setDeleteConfirmId(null)}
-                type="button"
-              >
-                <X size={18} />
-              </button>
-            </div>
+      {/* ========== Hard Delete Confirmation Modal ========== */}
+      {deleteConfirmId && (() => {
+        const acc = accounts?.find((a) => a.id === deleteConfirmId);
+        return (
+          <div className={styles.modalOverlay} onClick={() => setDeleteConfirmId(null)}>
+            <div className={styles.deleteModal} onClick={(e) => e.stopPropagation()}>
 
-            <div className={styles.modalBody}>
-              {statusMsg && statusMsg.type === 'error' && (
-                <div className={`${styles.statusMsg} ${styles.statusError}`} style={{ marginBottom: '1rem' }}>{statusMsg.text}</div>
-              )}
-              <p className={styles.confirmText}>
-                คุณต้องการลบ LINE Account{' '}
-                <span className={styles.confirmHighlight}>
-                  {accounts?.find((a) => a.id === deleteConfirmId)?.displayName || ''}
-                </span>{' '}
-                หรือไม่?
-              </p>
-              <p className={styles.confirmText} style={{ fontSize: '0.75rem', color: 'var(--color-text-tertiary)' }}>
-                การลบจะเป็นแบบ Soft Delete — ข้อมูลแชทจะยังคงอยู่ แต่จะไม่รับข้อความใหม่
-              </p>
-            </div>
-
-            <div className={styles.modalFooter}>
-              <button
-                className={styles.btnSecondary}
-                onClick={() => setDeleteConfirmId(null)}
-                type="button"
-                disabled={deleteMutation.isPending}
-              >
-                ยกเลิก
+              {/* Close button */}
+              <button className={styles.deleteModalClose} onClick={() => setDeleteConfirmId(null)} type="button">
+                <X size={15} />
               </button>
-              <button
-                className={styles.btnDanger}
-                onClick={() => handleDelete(deleteConfirmId)}
-                type="button"
-                disabled={deleteMutation.isPending}
-              >
-                {deleteMutation.isPending ? (
-                  <><RefreshCw size={14} className={styles.spinner} /> กำลังลบ...</>
-                ) : (
-                  <><Trash2 size={14} /> ลบ LINE Account</>
+
+              {/* Hero */}
+              <div className={styles.deleteHero}>
+                <div className={styles.deleteHeroGlow} />
+                <div className={styles.deleteHeroIcon}>
+                  <Trash2 size={26} />
+                </div>
+                <h3 className={styles.deleteHeroTitle}>ลบบัญชีถาวร</h3>
+                <p className={styles.deleteHeroSub}>การดำเนินการนี้<strong>ไม่สามารถย้อนกลับ</strong>ได้</p>
+              </div>
+
+              <div className={styles.deleteModalBody}>
+                {statusMsg && statusMsg.type === 'error' && (
+                  <div className={`${styles.statusMsg} ${styles.statusError}`}>{statusMsg.text}</div>
                 )}
-              </button>
+
+                {/* Account identity card */}
+                <div className={styles.deleteAccountCard}>
+                  {acc?.pictureUrl ? (
+                    <img src={acc.pictureUrl} alt={acc.displayName || ''} className={styles.deleteAccountAvatar} />
+                  ) : (
+                    <div className={styles.deleteAccountAvatarPlaceholder}>
+                      {(acc?.displayName || 'B').charAt(0)}
+                    </div>
+                  )}
+                  <div className={styles.deleteAccountInfo}>
+                    <p className={styles.deleteAccountName}>{acc?.displayName || 'ไม่มีชื่อ'}</p>
+                    <p className={styles.deleteAccountId}>{acc?.basicId || acc?.channelId}</p>
+                  </div>
+                  <span className={acc?.isActive ? styles.deleteAccountBadgeActive : styles.deleteAccountBadge}>
+                    {acc?.isActive ? <><Wifi size={10} /> เชื่อมต่อ</> : <><WifiOff size={10} /> ปิดอยู่</>}
+                  </span>
+                </div>
+
+                {/* Impact table */}
+                <div className={styles.deleteImpactSection}>
+                  <div className={styles.deleteImpactHeader}>
+                    <AlertTriangle size={11} style={{ flexShrink: 0 }} />
+                    ข้อมูลที่จะถูกลบทั้งหมด
+                  </div>
+                  <div className={styles.deleteImpactRow}>
+                    <MessageCircle size={14} className={styles.deleteImpactIcon} />
+                    <span className={styles.deleteImpactLabel}>การสนทนา</span>
+                    <span className={styles.deleteImpactCount}>{(acc?._count?.conversations ?? 0).toLocaleString()}</span>
+                  </div>
+                  <div className={styles.deleteImpactRowAlt}>
+                    <Bot size={14} className={styles.deleteImpactIcon} />
+                    <span className={styles.deleteImpactLabel}>ข้อความ</span>
+                    <span className={styles.deleteImpactCount}>{(acc?._count?.messages ?? 0).toLocaleString()}</span>
+                  </div>
+                  <div className={styles.deleteImpactRow}>
+                    <BookOpen size={14} className={styles.deleteImpactIcon} />
+                    <span className={styles.deleteImpactLabel}>Tags &amp; Labels</span>
+                    <span className={styles.deleteImpactCountAll}>ทั้งหมด</span>
+                  </div>
+                </div>
+
+                {/* Tip */}
+                <div className={styles.deleteHint}>
+                  <div className={styles.deleteHintIcon}><Power size={12} /></div>
+                  <span>ต้องการหยุดชั่วคราว? ใช้ <strong>ปิดใช้งาน</strong> แทนการลบ</span>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className={styles.deleteModalFooter}>
+                <button
+                  className={styles.btnSecondary}
+                  onClick={() => setDeleteConfirmId(null)}
+                  type="button"
+                  disabled={hardDeleteMutation.isPending}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  className={styles.deleteBtnDanger}
+                  onClick={() => handleHardDelete(deleteConfirmId)}
+                  type="button"
+                  disabled={hardDeleteMutation.isPending}
+                >
+                  {hardDeleteMutation.isPending ? (
+                    <><RefreshCw size={14} className={styles.spinner} /> กำลังลบ...</>
+                  ) : (
+                    <><Trash2 size={14} /> ลบถาวร</>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

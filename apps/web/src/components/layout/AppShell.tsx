@@ -4,6 +4,7 @@ import { BottomNav } from './BottomNav';
 import { SideNav } from './SideNav';
 import { LineSyncHandler } from './LineSyncHandler';
 import { WorkspaceProvider } from '@/hooks/useWorkspace';
+import { SocketProvider } from '@/components/providers/SocketProvider';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -22,19 +23,21 @@ export function AppShell({
   hideBottomNav = false,
 }: AppShellProps) {
   return (
-    <WorkspaceProvider>
-      <LineSyncHandler>
-        <div className={styles.shell}>
-          <SideNav className={styles.sideNav} />
-          <div className={styles.contentWrapper}>
-            {!hideTopBar && <TopBar title={title} />}
-            <main className={styles.main}>
-              {children}
-            </main>
-            {!hideBottomNav && <BottomNav />}
+    <SocketProvider>
+      <WorkspaceProvider>
+        <LineSyncHandler>
+          <div className={styles.shell}>
+            <SideNav className={styles.sideNav} />
+            <div className={styles.contentWrapper}>
+              {!hideTopBar && <TopBar title={title} />}
+              <main className={styles.main}>
+                {children}
+              </main>
+              {!hideBottomNav && <BottomNav />}
+            </div>
           </div>
-        </div>
-      </LineSyncHandler>
-    </WorkspaceProvider>
+        </LineSyncHandler>
+      </WorkspaceProvider>
+    </SocketProvider>
   );
 }

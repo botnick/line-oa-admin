@@ -169,6 +169,41 @@ export const conversationsRouter = router({
         data: { unreadCount: 0 },
       });
 
+      // Send read receipt to LINE user
+      try {
+        // Find the latest inbound message with a markAsReadToken
+        const latestMsg = await prisma.message.findFirst({
+          where: {
+            conversationId: input.id,
+            source: 'INBOUND',
+            markAsReadToken: { not: null },
+          },
+          orderBy: { createdAt: 'desc' },
+          select: { markAsReadToken: true, lineAccountId: true },
+        });
+
+        if (latestMsg?.markAsReadToken) {
+          // Get channel access token
+          const account = await prisma.lineAccount.findUnique({
+            where: { id: latestMsg.lineAccountId },
+            select: { channelAccessToken: true },
+          });
+
+          if (account) {
+            const { markAsRead } = await import('../../line/api');
+            await markAsRead(latestMsg.markAsReadToken, account.channelAccessToken);
+            console.log(`[markRead] ✅ Sent LINE read receipt for conversation ${input.id}`);
+          } else {
+            console.log(`[markRead] ⚠️ No LINE account found for lineAccountId: ${latestMsg.lineAccountId}`);
+          }
+        } else {
+          console.log(`[markRead] ℹ️ No markAsReadToken found for conversation ${input.id} (messages sent before feature was enabled)`);
+        }
+      } catch (err) {
+        // Don't block the local markRead if LINE API fails
+        console.error(`[markRead] ❌ Failed to send LINE read receipt:`, err);
+      }
+
       // Broadcast to all admin tabs so unread badge clears everywhere
       const { publishSyncEvent } = await import('../../redis');
       await publishSyncEvent('CONVERSATION_UPDATED', {

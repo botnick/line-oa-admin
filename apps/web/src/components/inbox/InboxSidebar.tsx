@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Search, Inbox as InboxIcon, Tag, Bookmark, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { trpc } from '@/lib/trpc';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { th } from '@/lib/thai';
@@ -362,60 +363,80 @@ export function InboxSidebar() {
                 <span className={styles.groupHeaderBadge}>{group.items.length}</span>
               </div>
               <div className={styles.groupList}>
-                {group.items.map((conv) => (
-                  <ConversationItem
-                    key={conv.id}
-                    id={conv.id}
-                    contactName={conv.contact?.displayName ?? 'Unknown'}
-                    contactAvatar={conv.contact?.avatarUrl}
-                    lastMessage={conv.lastMessageText ?? ''}
-                    lastMessageAt={conv.lastMessageAt ?? new Date()}
-                    lastMessageSource={conv.lastMessageSource ?? 'INBOUND'}
-                    lastMessageType={conv.lastMessageType ?? 'TEXT'}
-                    unreadCount={conv.unreadCount}
-                    isPinned={conv.isPinned}
-                    isActive={pathname === `/inbox/${conv.id}`}
-                    tags={conv.tags}
-                    hideOaBadge={true}
-                    contactStatus={
-                      !conv.contact?.isFollowing ? 'blocked'
-                      : conv.contact?.unfollowedAt ? 'refollow'
-                      : 'active'
-                    }
-                    onClick={() => handleConversationClick(conv.id)}
-                  />
-                ))}
+                <AnimatePresence initial={false}>
+                  {group.items.map((conv) => (
+                    <motion.div
+                      key={conv.id}
+                      layout="position"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ConversationItem
+                        id={conv.id}
+                        contactName={conv.contact?.displayName ?? 'Unknown'}
+                        contactAvatar={conv.contact?.avatarUrl}
+                        lastMessage={conv.lastMessageText ?? ''}
+                        lastMessageAt={conv.lastMessageAt ?? new Date()}
+                        lastMessageSource={conv.lastMessageSource ?? 'INBOUND'}
+                        lastMessageType={conv.lastMessageType ?? 'TEXT'}
+                        unreadCount={conv.unreadCount}
+                        isPinned={conv.isPinned}
+                        isActive={pathname === `/inbox/${conv.id}`}
+                        tags={conv.tags}
+                        hideOaBadge={true}
+                        contactStatus={
+                          !conv.contact?.isFollowing ? 'blocked'
+                          : conv.contact?.unfollowedAt ? 'refollow'
+                          : 'active'
+                        }
+                        onClick={() => handleConversationClick(conv.id)}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
           ))
         ) : (
-          conversations.map((conv) => (
-            <ConversationItem
-              key={conv.id}
-              id={conv.id}
-              contactName={conv.contact?.displayName ?? 'Unknown'}
-              contactAvatar={conv.contact?.avatarUrl}
-              lastMessage={conv.lastMessageText ?? ''}
-              lastMessageAt={conv.lastMessageAt ?? new Date()}
-              lastMessageSource={conv.lastMessageSource ?? 'INBOUND'}
-              lastMessageType={conv.lastMessageType ?? 'TEXT'}
-              unreadCount={conv.unreadCount}
-              isPinned={conv.isPinned}
-              isActive={pathname === `/inbox/${conv.id}`}
-              tags={conv.tags}
-              lineAccount={!accountId && conv.lineAccount ? {
-                id: conv.lineAccount.id,
-                displayName: conv.lineAccount.displayName ?? 'LINE OA',
-                pictureUrl: conv.lineAccount.pictureUrl
-              } : undefined}
-              contactStatus={
-                !conv.contact?.isFollowing ? 'blocked'
-                : conv.contact?.unfollowedAt ? 'refollow'
-                : 'active'
-              }
-              onClick={() => handleConversationClick(conv.id)}
-            />
-          ))
+          <AnimatePresence initial={false}>
+            {conversations.map((conv) => (
+              <motion.div
+                key={conv.id}
+                layout="position"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ConversationItem
+                  id={conv.id}
+                  contactName={conv.contact?.displayName ?? 'Unknown'}
+                  contactAvatar={conv.contact?.avatarUrl}
+                  lastMessage={conv.lastMessageText ?? ''}
+                  lastMessageAt={conv.lastMessageAt ?? new Date()}
+                  lastMessageSource={conv.lastMessageSource ?? 'INBOUND'}
+                  lastMessageType={conv.lastMessageType ?? 'TEXT'}
+                  unreadCount={conv.unreadCount}
+                  isPinned={conv.isPinned}
+                  isActive={pathname === `/inbox/${conv.id}`}
+                  tags={conv.tags}
+                  lineAccount={!accountId && conv.lineAccount ? {
+                    id: conv.lineAccount.id,
+                    displayName: conv.lineAccount.displayName ?? 'LINE OA',
+                    pictureUrl: conv.lineAccount.pictureUrl
+                  } : undefined}
+                  contactStatus={
+                    !conv.contact?.isFollowing ? 'blocked'
+                    : conv.contact?.unfollowedAt ? 'refollow'
+                    : 'active'
+                  }
+                  onClick={() => handleConversationClick(conv.id)}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         )}
       </div>
     </div>

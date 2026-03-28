@@ -226,6 +226,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   metadata: 'metadata',
+  markAsReadToken: 'markAsReadToken',
   sentByAdminId: 'sentByAdminId',
   sentByName: 'sentByName'
 };

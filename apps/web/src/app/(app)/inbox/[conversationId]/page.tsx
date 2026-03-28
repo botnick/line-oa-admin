@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { MessageCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { trpc } from '@/lib/trpc';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { ChatHeader } from '@/components/chat/ChatHeader';
@@ -429,18 +430,30 @@ export default function ChatPage() {
 
           if (el.type === 'image-group' && el.group) {
             return (
-              <ImageGrid
+              <motion.div
                 key={el.key}
-                messages={el.group.messages}
-                source={el.group.messages[0].source}
-              />
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ImageGrid
+                  messages={el.group.messages}
+                  source={el.group.messages[0].source}
+                />
+              </motion.div>
             );
           }
 
           // Single message
           const msg = el.msg!;
           return (
-            <div key={el.key} id={`msg-${msg.id}`}>
+            <motion.div 
+              key={el.key} 
+              id={`msg-${msg.id}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <ChatBubble
                 source={msg.source}
                 type={msg.type}
@@ -458,7 +471,7 @@ export default function ChatPage() {
                 highlightQuery={highlightQuery}
                 isHighlighted={msg.id === highlightMsgId}
               />
-            </div>
+            </motion.div>
           );
         })}
 

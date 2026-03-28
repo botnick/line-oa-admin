@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: [
     'sharp',
     'pg',
+    'socket.io',
     '@prisma/client',
     '@prisma/client-runtime-utils',
     '@prisma/adapter-pg',

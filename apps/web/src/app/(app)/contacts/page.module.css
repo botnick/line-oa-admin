@@ -374,3 +374,12 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ─── Mobile touch targets ─── */
+@media (max-width: 767px) {
+  .header { padding: var(--space-3) var(--space-4); }
+  .tagFilterBtn { padding: 8px 14px; font-size: 12px; min-height: 36px; }
+  .tagFilterWrap { padding: 8px var(--space-4); gap: 8px; }
+  .searchClear { width: 36px; height: 36px; }
+  .contactItem { padding: var(--space-3) var(--space-4); }
+}

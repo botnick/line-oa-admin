@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSettings } from '@line-oa/config/settings';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
@@ -53,6 +53,24 @@ export async function uploadToR2(
   );
 
   return key;
+}
+
+/**
+ * Delete an object from R2 (best-effort, logs errors silently)
+ */
+export async function deleteFromR2(key: string): Promise<void> {
+  try {
+    const client = getR2Client();
+    const settings = getSettings();
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: settings.r2.bucketName,
+        Key: key,
+      })
+    );
+  } catch (err) {
+    console.warn(`[r2-client] Failed to delete key ${key}:`, err);
+  }
 }
 
 /**

@@ -17,9 +17,9 @@ let __workerStarted = false;
 /**
  * Process media attachments:
  * 1. Download binary content from LINE Content API
- * 2. Generate thumbnail (for images)
- * 3. Upload original + thumbnail to R2
- * 4. Update MessageAttachment record with R2 keys
+ * 2. For IMAGES: optimize to single WebP (max 1200px, q80)
+ * 3. For others: upload original as-is
+ * 4. Update MessageAttachment record with R2 key
  */
 async function processMedia(job: Job<MediaJobData>) {
   const { attachmentId, lineMessageId, channelAccessToken, type } = job.data;
@@ -29,75 +29,72 @@ async function processMedia(job: Job<MediaJobData>) {
   // 1. Download from LINE
   const buffer = Buffer.from(await getContent(lineMessageId, channelAccessToken));
 
-  const ts = Date.now();
-  const basePath = `media/${attachmentId}`;
-
-  // 2. Upload original
-  const originalKey = `${basePath}/original`;
-  const mimeType = getMimeTypeForType(type);
-  await uploadToR2(originalKey, buffer, mimeType);
-
-  let thumbnailKey: string | null = null;
-  let previewKey: string | null = null;
+  let r2Key: string;
   let width: number | null = null;
   let height: number | null = null;
+  let uploadedSize = buffer.length;
 
-  // 3. Generate thumbnail + preview for images
   if (type === 'IMAGE') {
+    // 2a. Single optimized WebP (max 1200px, q80) — saves ~70-80% vs original
     try {
       const metadata = await sharp(buffer).metadata();
       width = metadata.width ?? null;
       height = metadata.height ?? null;
 
-      // Thumbnail (120px max)
-      const thumbBuffer = await sharp(buffer)
-        .resize(120, 120, { fit: 'cover' })
-        .webp({ quality: 70 })
-        .toBuffer();
-      thumbnailKey = `${basePath}/thumb.webp`;
-      await uploadToR2(thumbnailKey, thumbBuffer, 'image/webp');
-
-      // Preview (800px max)
-      const previewBuffer = await sharp(buffer)
-        .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
+      // Convert to WebP only (no resize) — keeps original dimensions, reduces file size
+      const optimized = await sharp(buffer)
         .webp({ quality: 80 })
         .toBuffer();
-      previewKey = `${basePath}/preview.webp`;
-      await uploadToR2(previewKey, previewBuffer, 'image/webp');
+
+      r2Key = `media/${attachmentId}.webp`;
+      await uploadToR2(r2Key, optimized, 'image/webp');
+      uploadedSize = optimized.length;
     } catch (err) {
-      console.error(`[media-worker] Could not create thumbnails for ${attachmentId}:`, err);
+      console.error(`[media-worker] Sharp failed for ${attachmentId}, uploading raw:`, err);
+      r2Key = `media/${attachmentId}`;
+      await uploadToR2(r2Key, buffer, 'image/jpeg');
     }
+  } else {
+    // 2b. VIDEO / AUDIO / FILE — store original as-is
+    const ext = getExtForType(type);
+    r2Key = `media/${attachmentId}.${ext}`;
+    const mimeType = getMimeTypeForType(type);
+    await uploadToR2(r2Key, buffer, mimeType);
   }
 
-  // 4. For VIDEO: use original as preview (can't generate thumb in this env easily)
-  if (type === 'VIDEO') {
-    previewKey = originalKey;
-  }
-
-  // 5. Update DB
+  // 3. Update DB — single key in r2KeyOriginal, no separate thumb/preview
   await prisma.messageAttachment.update({
     where: { id: attachmentId },
     data: {
       processingStatus: 'COMPLETED',
-      r2KeyOriginal: originalKey,
-      r2KeyThumbnail: thumbnailKey,
-      r2KeyPreview: previewKey,
+      r2KeyOriginal: r2Key,
+      r2KeyThumbnail: null,
+      r2KeyPreview: null,
       originalWidth: width,
       originalHeight: height,
       originalSize: buffer.length,
+      optimizedSize: uploadedSize,
     },
   });
 
-  console.log(`[media-worker] ✅ ${type} processed: ${attachmentId}`);
+  console.log(`[media-worker] ✅ ${type} processed: ${attachmentId} (${r2Key})`);
 }
 
 function getMimeTypeForType(type: string): string {
   switch (type) {
-    case 'IMAGE': return 'image/jpeg';
+    case 'IMAGE': return 'image/webp';
     case 'VIDEO': return 'video/mp4';
     case 'AUDIO': return 'audio/m4a';
     case 'FILE': return 'application/octet-stream';
     default: return 'application/octet-stream';
+  }
+}
+
+function getExtForType(type: string): string {
+  switch (type) {
+    case 'VIDEO': return 'mp4';
+    case 'AUDIO': return 'm4a';
+    default: return 'bin';
   }
 }
 

@@ -6,7 +6,7 @@ import { useLineSync, type LineSyncStatus } from '@/hooks/useLineSync';
 // ── Types ────────────────────────────────────────────────────────────────
 
 /**
- * Visual phase of the SSE connection indicator.
+ * Visual phase of the Socket.IO connection indicator.
  * - `idle`          — connected, nothing shown
  * - `reconnecting`  — amber shimmer bar
  * - `reconnected`   — transitions to green, then auto-fades to idle
@@ -28,7 +28,7 @@ const LineSyncContext = createContext<LineSyncContextValue>({
 const RECONNECTED_DISPLAY_MS = 2_000;
 
 /**
- * Provides SSE connection status AND visual phase to the entire app tree.
+ * Provides Socket.IO connection status AND visual phase to the entire app tree.
  * Automatically manages the amber→green→fade lifecycle so consumers only
  * need to read `phase` and apply the matching CSS class.
  */
@@ -66,7 +66,7 @@ export function LineSyncHandler({ children }: { children?: ReactNode }) {
 }
 
 /**
- * Read the current SSE connection status and visual phase.
+ * Read the current Socket.IO connection status and visual phase.
  *
  * @example
  * ```tsx

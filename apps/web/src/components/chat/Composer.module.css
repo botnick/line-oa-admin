@@ -242,4 +242,10 @@
   .pickerPopup {
     max-height: 50vh;
   }
+
+  /* Touch targets ≥ 44px (Apple HIG / Material Design) */
+  .actionBtn { width: 44px; height: 44px; }
+  .actions { gap: 4px; }
+  .sendButton { height: 44px; min-width: 44px; padding: 0 16px; font-size: 13px; }
+  .bottomBar { padding: 8px 14px calc(10px + env(safe-area-inset-bottom, 0px)); }
 }

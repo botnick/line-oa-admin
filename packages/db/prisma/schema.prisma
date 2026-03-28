@@ -211,6 +211,9 @@ model Message {
   updatedAt        DateTime       @updatedAt @map("updated_at")
   metadata         Json?
 
+  // LINE read receipt token (from webhook, never expires)
+  markAsReadToken  String?        @map("mark_as_read_token")
+
   // Admin sender tracking
   sentByAdminId String? @map("sent_by_admin_id")
   sentByName    String? @map("sent_by_name")

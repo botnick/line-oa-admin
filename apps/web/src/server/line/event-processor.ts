@@ -37,6 +37,7 @@ interface LineEvent {
     address?: string;
     packageId?: string;
     stickerId?: string;
+    markAsReadToken?: string;
   };
   webhookEventId?: string;
   follow?: { isUnblocked: boolean };
@@ -162,6 +163,7 @@ async function processMessageEvent(event: LineEvent, userId: string, lineAccount
       address: event.message.address ?? null,
       deliveryStatus: 'DELIVERED',
       lineTimestamp: new Date(event.timestamp),
+      markAsReadToken: event.message.markAsReadToken ?? null,
     },
   });
 
@@ -210,7 +212,7 @@ async function processMessageEvent(event: LineEvent, userId: string, lineAccount
     },
   });
 
-  // 6. Broadcast SSE event to frontend
+  // 6. Broadcast real-time event to frontend via Socket.IO
   await publishSyncEvent('NEW_MESSAGE', {
     conversationId: conv.id,
     messageId: message.id,
@@ -254,7 +256,7 @@ async function processFollowEvent(userId: string, lineAccountId: string, channel
     data: { contactId: contact.id, action: 'FOLLOW' },
   });
 
-  // Broadcast SSE for real-time UI update (contact list + conversation list)
+  // Broadcast real-time UI update via Socket.IO (contact list + conversation list)
   await publishSyncEvent('CONTACT_STATUS_CHANGE', {
     contactId: contact.id,
     conversationId: conversation.id,
@@ -313,7 +315,7 @@ async function processUnfollowEvent(userId: string, lineAccountId: string) {
     });
   }
 
-  // Broadcast SSE for real-time UI update
+  // Broadcast real-time UI update via Socket.IO
   await publishSyncEvent('CONTACT_STATUS_CHANGE', {
     contactId: contact.id,
     conversationId: conversation?.id,
@@ -344,7 +346,6 @@ async function ensureContact(userId: string, channelAccessToken: string) {
 
       let avatarR2Key = null;
       if (profile.pictureUrl) {
-        // Archive avatar asynchronously (don't block creation, but in this case we'll await it to save it immediately)
         avatarR2Key = await archiveAvatarToR2(userId, profile.pictureUrl);
       }
 
@@ -372,18 +373,27 @@ async function ensureContact(userId: string, channelAccessToken: string) {
       });
     }
   } else {
-    // Also try to update their latest profile info if possible, assuming they might have changed it
-    // But to save API calls, we just update lastSeenAt and isFollowing for now
+    // Update lastSeenAt + re-archive avatar (overwrite in R2, cleanup old key)
     let dataToUpdate: any = {
       lastSeenAt: new Date(),
       isFollowing: true,
-      // NOTE: Do NOT reset unfollowedAt to null — we preserve it so admin
-      // can see the contact previously unfollowed (refollow indicator).
     };
 
-    // Note: We could fetch new profile here and update avatarR2Key, but to avoid Rate Limits
-    // we only do this on fresh follows or periodically outside of message webhooks.
-    // For now we just update lastSeenAt.
+    // Re-archive avatar if pictureUrl changed or old key has timestamp format
+    if (contact.pictureUrl) {
+      try {
+        const newKey = await archiveAvatarToR2(
+          userId,
+          contact.pictureUrl,
+          contact.avatarR2Key // pass old key for cleanup
+        );
+        if (newKey && newKey !== contact.avatarR2Key) {
+          dataToUpdate.avatarR2Key = newKey;
+        }
+      } catch {
+        // Non-critical: don't block on avatar re-archive
+      }
+    }
 
     await prisma.contact.update({
       where: { id: contact.id },
@@ -492,7 +502,7 @@ async function notifyAdminsNewMessage(lineAccountId: string, conversationId: str
       });
     }
 
-    // Publish SSE for live UI update
+    // Publish real-time event for live UI update
     await publishSyncEvent('NEW_NOTIFICATION', { targetAdminUserId: admin.id });
 
     // Send Web Push only for first message (not coalesced updates) to avoid push spam
@@ -555,7 +565,7 @@ async function notifyAdminsContactStatusChange(
       },
     });
 
-    // Publish SSE for live notification bell update
+    // Publish real-time event for live notification bell update
     await publishSyncEvent('NEW_NOTIFICATION', { targetAdminUserId: admin.id });
 
     // Send Web Push
